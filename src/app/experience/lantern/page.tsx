@@ -157,7 +157,7 @@ export default function LanternPage() {
 
       {/* 3D Scene */}
       <div className="absolute inset-0 cursor-grab active:cursor-grabbing">
-        <Canvas shadowMap>
+        <Canvas shadows>
             <PerspectiveCamera makeDefault position={[0, 2, 10]} fov={50} />
             <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 1.8} minPolarAngle={Math.PI / 3} />
             
