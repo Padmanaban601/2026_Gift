@@ -38,7 +38,7 @@ export default function Home() {
       y: 0,
       transition: {
         duration: 1.2,
-        ease: [0.22, 1, 0.36, 1],
+        ease: "easeOut" as const,
       },
     },
   };
@@ -198,7 +198,7 @@ export default function Home() {
               whileHover={{ 
                 scale: 1.1,
                 x: isLeft ? 40 : -40,
-                transition: { duration: 0.5, type: "spring" }
+                transition: { duration: 0.5, type: "spring" as const }
               }}
               transition={{ 
                 duration: 20 + Math.random() * 10, 
