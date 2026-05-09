@@ -9,7 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.0",
+    "@types/three": "^0.184.0",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
@@ -19,7 +23,10 @@
     "posthog-js": "^1.371.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "tailwind-merge": "^3.5.0"
+    "react-player": "^3.4.0",
+    "tailwind-merge": "^3.5.0",
+    "three": "^0.184.0",
+    "yt-dlp-exec": "^1.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

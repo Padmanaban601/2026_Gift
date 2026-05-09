@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Outfit, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
-import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -15,8 +14,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "For You | A Special Birthday Gift",
-  description: "A premium, private birthday experience created just for you.",
+  title: "Happy Birthday Aditi",
+  description: "A special birthday surprise.",
 };
 
 export default function RootLayout({
@@ -29,12 +28,10 @@ export default function RootLayout({
       lang="en"
       className={`${outfit.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans selection:bg-primary-lavender/30">
-        <AnalyticsProvider>
-          <ClientLayout>
-            {children}
-          </ClientLayout>
-        </AnalyticsProvider>
+      <body className="min-h-full flex flex-col bg-slate-950 text-white font-sans selection:bg-purple-500/30">
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

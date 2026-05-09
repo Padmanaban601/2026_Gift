@@ -1,228 +1,232 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from 'react';
-import { LucideArrowRight, LucideSparkles, LucideHeart } from 'lucide-react';
-import Section from '@/components/Section';
-import Link from 'next/link';
-import Countdown from '@/components/Countdown';
-import Scanner from '@/components/Scanner';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import PasscodeLock from '@/components/PasscodeLock';
-import MemoryGallery from '@/components/MemoryGallery';
-import { trackMilestone } from '@/lib/analytics';
-import Magnetic from '@/components/Magnetic';
-import ScratchReveal from '@/components/ScratchReveal';
-import HorizontalJourney from '@/components/HorizontalJourney';
-
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import ThreeBackground from "@/components/ThreeBackground";
+import Link from "next/link";
+import { ArrowRight, Sparkles, Stars, Heart } from "lucide-react";
+import Countdown from "@/components/Countdown";
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const [greeting, setGreeting] = useState("");
+  const [time, setTime] = useState(new Date());
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 1.1]);
-  const y = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
+  useEffect(() => {
+    const hours = time.getHours();
+    if (hours < 12) setGreeting("Good Morning");
+    else if (hours < 17) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
+  }, [time]);
+
+  const birthdayDate = "2026-06-06T00:00:00";
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.5,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1.2,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
 
   return (
-    <div ref={containerRef} className="relative bg-background text-foreground min-h-screen">
-      {/* Hero Section */}
-            <section className="relative h-svh flex items-center justify-center overflow-hidden">
+    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-12 bg-[#02040a]">
+      {/* Noise Texture Replacement */}
+      <div className="fixed inset-0 z-50 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')]" />
+      
+      <ThreeBackground name="Happy Birthday Aditi" />
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="z-10 text-center max-w-5xl w-full"
+      >
+        <motion.div variants={itemVariants} className="flex justify-center mb-8">
+          <div className="relative group">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-4 bg-gradient-to-r from-purple-500/20 via-transparent to-pink-500/20 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity"
+            />
+            <div className="relative px-6 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md flex items-center gap-3">
+              <Sparkles className="w-4 h-4 text-purple-400" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300">A Special Journey Awaits</span>
+              <Stars className="w-4 h-4 text-pink-400" />
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <h1 className="text-6xl md:text-9xl font-serif font-bold text-white mb-8 tracking-tight leading-[0.9]">
+            {greeting}, <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 [text-shadow:0_0_30px_rgba(168,85,247,0.4)]">
+              Aditi
+            </span>
+          </h1>
+        </motion.div>
+
+        <motion.div 
+          variants={itemVariants}
+          className="relative max-w-2xl mx-auto"
+        >
+          <div className="absolute -left-8 -top-4 text-6xl text-white/10 font-serif leading-none italic">“</div>
+          <p className="text-xl md:text-3xl text-slate-400 font-light italic leading-relaxed mb-12">
+            In a world of constant motion, <br className="hidden md:block" />
+            your smile is the <span className="text-white">perfect light</span>.
+          </p>
+          <div className="absolute -right-8 -bottom-12 text-6xl text-white/10 font-serif leading-none italic rotate-180">“</div>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Countdown targetDate={birthdayDate} />
+        </motion.div>
+
+        <motion.div 
+          variants={itemVariants}
+          className="mt-16"
+        >
+          <Link href="/message">
+            <motion.div
+              whileHover="hover"
+              className="relative inline-flex items-center gap-4 px-12 py-5 rounded-[24px] bg-white text-slate-950 font-bold overflow-hidden transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)] hover:shadow-white/20"
+            >
               <motion.div 
-                style={{ opacity, scale, y }}
-                className="absolute inset-0 z-0"
+                variants={{
+                  hover: { x: 5 }
+                }}
+                className="relative z-10 flex items-center gap-3"
               >
-                {/* Ambient Background Glows */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,_rgba(255,175,189,0.2)_0%,_transparent_60%)]" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white/10" />
-                <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-accent-primary/20 blur-[180px] rounded-full animate-aurora opacity-40 mix-blend-multiply" />
-                <div className="absolute -bottom-1/4 -left-1/4 w-[800px] h-[800px] bg-accent-secondary/20 blur-[180px] rounded-full animate-aurora opacity-30 mix-blend-multiply" style={{ animationDirection: 'reverse', animationDuration: '25s' }} />
+                <span className="text-lg">Begin the Experience</span>
+                <ArrowRight className="w-5 h-5" />
               </motion.div>
-
-              <div className="container mx-auto px-6 md:px-8 relative z-10 pt-20">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1.2 }}
-                  className="max-w-4xl mx-auto text-center space-y-12"
-                >
-                  <div className="space-y-8 md:space-y-12">
-                    <motion.div 
-                      initial={{ scale: 0.5, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className="flex items-center justify-center gap-4 mb-8"
-                    >
-                      <div className="h-px w-8 md:w-12 bg-accent-primary/30" />
-                      <LucideSparkles className="w-4 h-4 text-accent-secondary animate-pulse" />
-                      <div className="h-px w-8 md:w-12 bg-accent-primary/30" />
-                    </motion.div>
-
-                    <motion.div 
-                      initial={{ letterSpacing: "2em", opacity: 0 }}
-                      animate={{ letterSpacing: "1.2em", opacity: 1 }}
-                      className="space-y-4 md:space-y-6"
-                    >
-                      <span className="text-[9px] md:text-xs uppercase text-accent-secondary block font-black">
-                        Since 2005 • Chapter XXI
-                      </span>
-                    </motion.div>
-
-                    <h1 className="text-[14vw] md:text-[10rem] lg:text-[12rem] font-serif leading-[0.85] md:leading-[0.8] tracking-tighter italic">
-                      Sweet <br />
-                      <span className="text-accent-gradient not-italic">Surprise.</span>
-                    </h1>
-                  </div>
-
-                  <p className="text-lg md:text-2xl lg:text-3xl text-foreground/50 font-light max-w-2xl mx-auto leading-relaxed italic px-4 border-l-2 border-accent-primary/10 pl-8 ml-auto mr-auto">
-                    &quot;I wanted to give you something as unique as you are. <br className="hidden md:block" />Wishing you the most wonderful day.&quot;
-                  </p>
-
-                  <div className="pt-8">
-                    <Magnetic>
-                      <button 
-                        onClick={() => document.getElementById('soul-check')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="group flex items-center justify-center gap-6 text-foreground/40 hover:text-foreground transition-all uppercase tracking-[0.4em] text-[10px] font-bold mx-auto px-8 py-4 rounded-full border border-black/5 hover:border-black/10 bg-white/5 backdrop-blur-sm"
-                      >
-                        Explore More <LucideArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                      </button>
-                    </Magnetic>
-                  </div>
-                </motion.div>
-              </div>
-            </section>
-
-            {/* Countdown Area */}
-            <motion.section 
-              onViewportEnter={() => trackMilestone("Countdown Section Viewed")}
-              className="py-20 md:py-32 relative flex justify-center"
-            >
-              <div className="absolute inset-0 bg-accent-primary/5 blur-[120px] opacity-20 pointer-events-none" />
-              <div className="glass px-6 md:px-12 py-10 md:py-16 rounded-[2.5rem] md:rounded-[3rem] text-center max-w-4xl w-full mx-6 md:mx-8">
-                 <p className="text-[10px] uppercase tracking-[0.5em] text-foreground/30 mb-6 md:mb-8 font-bold">Waiting for June 6th</p>
-                 <Countdown targetDate="2026-06-06T00:00:00" />
-              </div>
-            </motion.section>
-
-            {/* Scratch Reveal Section */}
-            <Section className="py-24 flex flex-col items-center">
-              <div className="text-center mb-12">
-                <span className="text-[10px] uppercase tracking-[0.5em] text-accent-primary mb-4 font-bold block">A Secret for You</span>
-                <h2 className="text-4xl md:text-6xl font-serif italic">Something Hidden.</h2>
-              </div>
-              <ScratchReveal 
-                width={400} 
-                height={250} 
-                onComplete={() => trackMilestone("Secret Message Revealed")}
-                className="shadow-2xl"
-              >
-                <div className="text-center space-y-4">
-                  <LucideHeart className="w-8 h-8 text-accent-primary mx-auto animate-bounce" />
-                  <p className="text-xl font-serif italic text-foreground/80 leading-relaxed">
-                    &quot;You are the most amazing person I know. Happy Birthday!&quot;
-                  </p>
-                </div>
-              </ScratchReveal>
-            </Section>
-
-            {/* Quote Section */}
-            <Section className="py-32 md:py-64 relative overflow-hidden">
-              <div className="max-w-5xl mx-auto px-6 md:px-8">
-                <motion.div
-                   initial={{ opacity: 0 }}
-                   whileInView={{ opacity: 1 }}
-                   transition={{ duration: 1.5 }}
-                   className="relative"
-                >
-                  <span className="text-[8rem] md:text-[12rem] font-serif absolute -top-24 md:-top-40 -left-10 md:-left-20 text-white/[0.03] pointer-events-none select-none">&quot;</span>
-                  <h2 className="text-4xl sm:text-5xl md:text-8xl font-serif italic text-foreground leading-tight mb-8 md:mb-16 text-center lg:text-left relative">
-                    &quot;The world feels <br />
-                    <span className="lg:ml-40 text-accent-primary drop-shadow-[0_0_15px_rgba(255,175,189,0.4)]">kinder when you smile.&quot;</span>
-                    <motion.div 
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                      className="absolute -top-10 md:top-0 right-0 md:right-40"
-                    >
-                      <LucideSparkles className="w-8 h-8 md:w-12 md:h-12 text-accent-tertiary" />
-                    </motion.div>
-                  </h2>
-                  <div className="flex justify-center md:justify-end mt-8 md:mt-12">
-                     <p className="text-lg md:text-xl text-foreground/40 max-w-lg leading-relaxed font-light italic text-center md:text-right">
-                      This is for you, because you make everything better just by being yourself. No pressure, just a simple thank you.
-                     </p>
-                  </div>
-                </motion.div>
-              </div>
-            </Section>
-
-            {/* Horizontal Journey Section */}
-            <HorizontalJourney />
-
-            {/* Mood Check Section */}
-            <motion.section 
-              id="soul-check" 
-              onViewportEnter={() => trackMilestone("Mood Check Viewed")}
-              className="py-24 md:py-48 px-6 md:px-8"
-            >
-              <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
-                <div className="lg:col-span-5 flex flex-col justify-center text-center lg:text-left">
-                   <span className="text-[10px] uppercase tracking-[0.5em] text-accent-tertiary mb-6 font-bold">Your Mood</span>
-                  <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif mb-8 tracking-tighter leading-none">How are you <br />feeling?</h2>
-                  <p className="text-foreground/40 text-lg md:text-xl font-light italic mb-8 md:mb-12 max-w-md mx-auto lg:mx-0">
-                    Let&apos;s see if you&apos;re having a good day today.
-                  </p>
-                </div>
-                <div className="lg:col-span-7">
-                  <div className="glass p-6 md:p-12 rounded-[2.5rem] md:rounded-[4rem] flex justify-center items-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-accent-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                    <Scanner />
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Memory Gallery Section */}
-            <motion.div onViewportEnter={() => trackMilestone("Gallery Viewed")}>
-              <MemoryGallery />
-            </motion.div>
-
-            {/* Next Section Link - Premium Reveal */}
-            <section className="py-40 md:py-80 relative flex flex-col items-center justify-center overflow-hidden px-6 md:px-8">
-              <motion.div 
-                animate={{ scale: [1, 1.2, 1] }} 
-                transition={{ duration: 20, repeat: Infinity }}
-                className="absolute w-[600px] md:w-[1000px] h-[600px] md:h-[1000px] bg-accent-primary/5 blur-[150px] md:blur-[200px] rounded-full opacity-30" 
-              />
               
-              <Magnetic>
-                <Link 
-                  href="/thoughts" 
-                  className="group block bg-white/40 backdrop-blur-2xl px-8 md:px-24 py-16 md:py-32 rounded-[3rem] md:rounded-[6rem] border border-white shadow-2xl text-center relative z-10 hover:bg-white/60 transition-all duration-700 max-w-4xl w-full"
-                >
-                  <span className="text-[10px] md:text-xs uppercase tracking-[0.8em] text-accent-tertiary block font-black mb-8 md:mb-12">Next Chapter</span>
-                  <h3 className="text-4xl md:text-8xl font-serif italic mb-8 md:mb-16 group-hover:text-accent-primary transition-colors duration-700 leading-none tracking-tighter text-gray-900">
-                    Digital <br />
-                    <span className="text-accent-gradient not-italic">Notes.</span>
-                  </h3>
-                  <div className="flex items-center justify-center gap-6 opacity-40 group-hover:opacity-100 transition-all">
-                     <div className="h-px w-8 md:w-16 bg-accent-primary/30" />
-                     <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em]">Read the Thoughts</span>
-                     <LucideArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              <motion.div 
+                variants={{
+                  hover: { x: ["-100%", "100%"] }
+                }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent -skew-x-12"
+              />
+            </motion.div>
+          </Link>
+        </motion.div>
+      </motion.div>
+
+      {/* Luxury Background Layers */}
+      <div className="fixed inset-0 pointer-events-none -z-10">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.4, 0.3],
+          }}
+          transition={{ duration: 15, repeat: Infinity }}
+          className="absolute top-[10%] left-[-5%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[160px]" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{ duration: 18, repeat: Infinity, delay: 2 }}
+          className="absolute bottom-[10%] right-[-5%] w-[50%] h-[50%] bg-pink-600/5 rounded-full blur-[160px]" 
+        />
+      </div>
+
+      {/* Floating Micro-hearts */}
+      <div className="fixed inset-0 pointer-events-none opacity-20">
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ 
+              x: Math.random() * 100 + "%", 
+              y: "110%",
+              opacity: 0,
+              rotate: Math.random() * 360
+            }}
+            animate={{ 
+              y: "-10%",
+              opacity: [0, 1, 1, 0],
+              rotate: Math.random() * 360 + 180
+            }}
+            transition={{ 
+              duration: Math.random() * 10 + 20, 
+              repeat: Infinity,
+              delay: Math.random() * 20,
+              ease: "linear"
+            }}
+            className="absolute"
+          >
+            <Stars className="w-3 h-3 text-pink-400/30" />
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Elegant Floating Balloons (Framing the sides) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {[...Array(8)].map((_, i) => {
+          const isLeft = i < 4;
+          const sideX = isLeft ? 5 + Math.random() * 10 : 85 + Math.random() * 10;
+          
+          return (
+            <motion.div
+              key={`balloon-${i}`}
+              style={{ left: `${sideX}%` }}
+              initial={{ 
+                y: "120%",
+                rotate: Math.random() * 20 - 10
+              }}
+              animate={{ 
+                y: "-20%",
+                x: [0, isLeft ? 15 : -15, 0],
+                rotate: [Math.random() * 20 - 10, Math.random() * 40 - 20, Math.random() * 20 - 10]
+              }}
+              whileHover={{ 
+                scale: 1.1,
+                x: isLeft ? 40 : -40,
+                transition: { duration: 0.5, type: "spring" }
+              }}
+              transition={{ 
+                duration: 20 + Math.random() * 10, 
+                repeat: Infinity,
+                delay: i * 1.5,
+                ease: "linear"
+              }}
+              className="absolute cursor-pointer z-20"
+            >
+              <div className="relative">
+                  {/* Balloon Body */}
+                  <div 
+                      className={`w-12 h-16 md:w-16 md:h-20 rounded-[50%_50%_50%_50%_/_40%_40%_60%_60%] shadow-xl backdrop-blur-[2px] border border-white/10 ${
+                          i % 2 === 0 ? 'bg-gradient-to-br from-purple-500/30 to-purple-700/20' : 'bg-gradient-to-br from-pink-500/30 to-pink-700/20'
+                      }`}
+                  >
+                      {/* Glossy Highlight */}
+                      <div className="absolute top-3 left-3 w-3 h-5 bg-white/20 rounded-full blur-[2px] rotate-[25deg]" />
                   </div>
-                </Link>
-              </Magnetic>
-            </section>
-
-            <footer className="py-24 border-t border-black/5 text-center relative bg-white/5">
-              <p className="text-[9px] uppercase tracking-[0.8em] text-gray-400 mb-6 font-bold">Made for You • 2026</p>
-              <p className="text-[10px] text-gray-300 tracking-[0.2em]">BE HAPPY. NO PRESSURE.</p>
-            </footer>
-
-      {/* Texture */}
-      <div className="noise" />
-    </div>
+                  {/* Balloon Knot */}
+                  <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 ${i % 2 === 0 ? 'bg-purple-500/40' : 'bg-pink-500/40'}`} />
+                  {/* Balloon String */}
+                  <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[1px] h-24 bg-gradient-to-b from-white/20 to-transparent" />
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </main>
   );
 }
-

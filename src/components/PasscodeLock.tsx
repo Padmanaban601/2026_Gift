@@ -1,324 +1,226 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LucideDelete, 
-  LucideLock, 
-  LucideHeart, 
-  LucideScan, 
-  LucideXCircle, 
-  LucideGift, 
-  LucideAlertCircle,
-  LucideShieldAlert,
-  LucideGhost
-} from 'lucide-react';
-import { trackMilestone } from '@/lib/analytics';
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { Delete } from "lucide-react";
 
-interface PasscodeLockProps {
-  onSuccess: () => void;
-}
+const CORRECT_PASSCODE = "1234";
 
-const CORRECT_PASSCODE = "1506"; 
-
-const getReaction = (wrongCount: number) => {
-  const reactions = [
-    { 
-      icon: <LucideShieldAlert className="w-24 h-24 text-red-500" />, 
-      title: "HOW DARE YOU!", 
-      subtitle: "Wrong code detected. Are you an intruder?",
-      color: "from-red-50 to-red-100"
-    },
-    { 
-      icon: <LucideGhost className="w-24 h-24 text-orange-500" />, 
-      title: "NICE TRY!", 
-      subtitle: "The bunny is watching you. Try again...",
-      color: "from-orange-50 to-orange-100"
-    },
-    { 
-      icon: <LucideXCircle className="w-24 h-24 text-pink-600" />, 
-      title: "REALLY?", 
-      subtitle: "The cat is not amused. Think harder!",
-      color: "from-pink-50 to-pink-100"
-    }
-  ];
-  
-  return reactions[wrongCount % reactions.length];
-};
-
-const WrongReactionDisplay = ({ count }: { count: number }) => {
-  const reaction = getReaction(count);
-
-  return (
-    <div className={`w-full aspect-square rounded-[2rem] bg-gradient-to-br ${reaction.color} flex flex-col items-center justify-center p-8 space-y-6 border-4 border-white shadow-inner`}>
-      <motion.div
-        animate={{ scale: [1, 1.1, 1], rotate: [0, -5, 5, 0] }}
-        transition={{ duration: 0.5, repeat: Infinity, repeatType: "mirror" }}
-      >
-        {reaction.icon}
-      </motion.div>
-      <div className="space-y-2">
-          <h3 className="text-2xl font-black text-gray-800 tracking-tight">{reaction.title}</h3>
-          <p className="text-sm text-gray-500 font-medium italic">{reaction.subtitle}</p>
-      </div>
-    </div>
-  );
-};
-
-export default function PasscodeLock({ onSuccess }: PasscodeLockProps) {
+export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
   const [passcode, setPasscode] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [showGiftAccept, setShowGiftAccept] = useState(false);
-  const [showNoReaction, setShowNoReaction] = useState(false);
-  const [noLevel, setNoLevel] = useState(0);
-  const [wrongCount, setWrongCount] = useState(0);
+  const [error, setError] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const controls = useAnimation();
 
-  const handleNumberClick = (num: string) => {
-    if (passcode.length < 4) {
-      setPasscode(prev => prev + num);
-      setError(null);
+  const handleKeyPress = useCallback((num: string) => {
+    if (passcode.length < 4 && !isVerifying) {
+      setPasscode((p) => p + num);
+      setError(false);
     }
-  };
+  }, [passcode.length, isVerifying]);
 
-  const handleDelete = () => {
-    setPasscode(prev => prev.slice(0, -1));
-  };
+  const handleBackspace = useCallback(() => {
+    if (!isVerifying) {
+      setPasscode((p) => p.slice(0, -1));
+      setError(false);
+    }
+  }, [isVerifying]);
 
   useEffect(() => {
     if (passcode.length === 4) {
-      if (passcode === CORRECT_PASSCODE) {
-        trackMilestone("Passcode Unlocked", { attempts: wrongCount + 1 });
-        setTimeout(() => setShowGiftAccept(true), 0);
-      } else {
-        const timer = setTimeout(() => {
-          setWrongCount(prev => prev + 1);
-          setError("incorrect");
-          setPasscode("");
-        }, 300);
-        return () => clearTimeout(timer);
-      }
+      setIsVerifying(true);
+      const t = setTimeout(() => {
+        if (passcode === CORRECT_PASSCODE) {
+          onUnlock();
+        } else {
+          setError(true);
+          setIsVerifying(false);
+          controls.start({
+            x: [-14, 14, -14, 14, -7, 7, 0],
+            transition: { duration: 0.5 },
+          });
+          setTimeout(() => { setPasscode(""); setError(false); }, 900);
+        }
+      }, 900);
+      return () => clearTimeout(t);
     }
-  }, [passcode]);
+  }, [passcode, onUnlock, controls]);
 
-  if (showGiftAccept) {
-    return (
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="fixed inset-0 z-[100] bg-[#FFDEE9] flex flex-col items-center justify-center p-8"
-      >
-        <AnimatePresence mode="wait">
-          {!showNoReaction ? (
-            <motion.div 
-                key="accept-modal"
-                initial={{ scale: 0.9, y: 20, opacity: 0 }}
-                animate={{ scale: 1, y: 0, opacity: 1 }}
-                exit={{ scale: 1.1, opacity: 0, filter: 'blur(10px)' }}
-                className="max-w-md w-full bg-white rounded-[3rem] p-12 shadow-2xl text-center space-y-8 border-8 border-[#FF8E9E]/20"
-            >
-                <motion.div 
-                    animate={{ 
-                        y: [0, -20, 0],
-                        rotate: [0, -5, 5, 0]
-                    }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="relative w-48 h-48 mx-auto flex items-center justify-center bg-gradient-to-br from-pink-100 to-pink-200 rounded-[3rem] shadow-lg border-4 border-white"
-                >
-                    <LucideGift className="w-24 h-24 text-[#FF4D6D] drop-shadow-lg" />
-                    <div className="absolute inset-0 bg-white/30 blur-2xl rounded-full scale-50 animate-pulse" />
-                </motion.div>
-                
-                <div className="space-y-4">
-                    <h2 className="text-3xl font-black text-[#FF4D6D] uppercase tracking-tight">Ready for your gift?</h2>
-                    <p className="text-[#FF8E9E] font-bold italic leading-relaxed">
-                        &quot;Everything inside was made <br />specifically for you...&quot;
-                    </p>
-                </div>
-                
-                <div className="flex gap-4">
-                    <button 
-                        onClick={onSuccess}
-                        className="flex-1 py-4 bg-[#FF4D6D] text-white rounded-2xl font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-[#FF4D6D]/40 active:scale-95"
-                    >
-                        Yes
-                    </button>
-                    <button 
-                        onClick={() => {
-                          setShowNoReaction(true);
-                          setNoLevel(1);
-                        }}
-                        className="flex-1 py-4 bg-[#FFE5E9] text-[#FF4D6D] rounded-2xl font-black uppercase tracking-widest hover:bg-white hover:border-[#FF4D6D] border-2 border-transparent transition-all active:scale-95"
-                    >
-                        No
-                    </button>
-                </div>
-            </motion.div>
-          ) : (
-            <motion.div 
-                key={`no-modal-${noLevel}`}
-                initial={{ scale: 0.9, y: 20, opacity: 0 }}
-                animate={{ scale: 1, y: 0, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0, rotate: noLevel % 2 === 0 ? 5 : -5 }}
-                className="max-w-md w-full bg-white rounded-[3.5rem] p-12 shadow-2xl text-center space-y-10 border-8 border-gray-100"
-            >
-                <div className="relative group">
-                    <motion.div 
-                        animate={{ 
-                            scale: [1, 1.2, 1],
-                            rotate: [0, 10, -10, 0]
-                        }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="text-8xl"
-                    >
-                        {noLevel === 1 && "🥺"}
-                        {noLevel === 2 && "🧐"}
-                        {noLevel === 3 && "😠"}
-                        {noLevel === 4 && "🐇"}
-                        {noLevel >= 5 && "🔒"}
-                    </motion.div>
-                </div>
-                
-                <div className="space-y-4">
-                    <h2 className="text-3xl font-black text-gray-800 uppercase tracking-tight">
-                        {noLevel === 1 && "Are you sure?"}
-                        {noLevel === 2 && "Wait, really?"}
-                        {noLevel === 3 && "Now you're just testing me!"}
-                        {noLevel === 4 && "A bunny is crying..."}
-                        {noLevel >= 5 && "Access Denied (to No)"}
-                    </h2>
-                    <p className="text-gray-400 font-medium italic leading-relaxed">
-                        {noLevel === 1 && "\"It would make me very sad if you didn't see what's inside...\""}
-                        {noLevel === 2 && "\"I think you accidentally clicked the wrong button. The big pink one is over there!\""}
-                        {noLevel === 3 && "\"My pixels are starting to sweat. Please just click Yes!\""}
-                        {noLevel === 4 && "\"Look what you've done to the poor bunny. Are you heartless?\""}
-                        {noLevel >= 5 && "\"I've disabled the 'No' button logic. It just leads back here now. Resistance is futile!\""}
-                    </p>
-                </div>
-                
-                <div className="flex flex-col gap-4">
-                    <button 
-                        onClick={() => {
-                          setShowNoReaction(false);
-                          setNoLevel(0);
-                        }}
-                        className="w-full py-5 bg-[#FF4D6D] text-white rounded-2xl font-black uppercase tracking-[0.2em] hover:scale-105 transition-transform shadow-xl active:scale-95"
-                    >
-                        Okay, I&apos;ll see it!
-                    </button>
-                    <button 
-                        onClick={() => {
-                          setNoLevel(prev => prev + 1);
-                        }}
-                        className="w-full py-4 text-gray-300 text-[10px] font-black uppercase tracking-[0.4em] hover:text-gray-400 transition-colors"
-                    >
-                        {noLevel === 1 && "Still No..."}
-                        {noLevel === 2 && "I meant what I said."}
-                        {noLevel === 3 && "Try to stop me!"}
-                        {noLevel === 4 && "Sorry bunny..."}
-                        {noLevel >= 5 && "I'm stuck here, aren't I?"}
-                    </button>
-                </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    );
-  }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (/^[0-9]$/.test(e.key)) handleKeyPress(e.key);
+      if (e.key === "Backspace") handleBackspace();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [handleKeyPress, handleBackspace]);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#FFDEE9] flex items-center justify-center overflow-hidden font-sans">
-      <div className="absolute inset-0 opacity-20">
-         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#FF8E9E] blur-[150px] rounded-full animate-pulse" />
-         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#FF8E9E] blur-[150px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+    <div className="min-h-screen w-full flex flex-col items-center justify-between overflow-hidden bg-black">
+
+      {/* ── Full-bleed art background ── */}
+      <div className="fixed inset-0 z-0">
+        <img
+          src="/portal_hero_v2.png"
+          alt=""
+          className="w-full h-full object-cover brightness-[0.45] scale-105"
+        />
+        {/* gradient layers */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+        {/* purple tint bloom */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-purple-600/10 blur-[140px]" />
       </div>
 
-      <AnimatePresence>
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            exit={{ opacity: 0, scale: 0.5, rotate: 10 }}
-            className="fixed inset-0 z-[110] bg-black/80 flex flex-col items-center justify-center p-8 backdrop-blur-sm"
-          >
-            <div className="max-w-sm w-full bg-white rounded-[3.5rem] p-10 text-center space-y-8 shadow-[0_0_50px_rgba(255,77,109,0.3)] border-4 border-white">
-                <WrongReactionDisplay count={wrongCount} />
-                <button 
-                    onClick={() => setError(null)}
-                    className="w-full py-5 bg-gray-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-transform active:scale-95"
-                >
-                    Try Again
-                </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
+      {/* ── Heading (Top) ── */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 w-full max-w-md px-6 flex flex-col items-center"
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 text-center pt-20 px-8"
       >
-        <div className="mb-12 text-center space-y-4">
-            <motion.div 
-                animate={{ rotateY: [0, 360] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                className="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center mx-auto shadow-xl mb-6 border-4 border-white"
-            >
-                <LucideLock className="w-10 h-10 text-[#FF4D6D]" />
-            </motion.div>
-            <h1 className="text-4xl font-black text-[#FF4D6D] tracking-tight uppercase">Entre a passcode</h1>
-            <p className="text-[#FF8E9E] font-medium tracking-wide">A secret just for us...</p>
-        </div>
+        <motion.p
+          initial={{ opacity: 0, letterSpacing: "0.2em" }}
+          animate={{ opacity: 0.4, letterSpacing: "0.5em" }}
+          transition={{ delay: 0.4, duration: 1 }}
+          className="text-white text-[9px] font-bold uppercase mb-5"
+        >
+          Private Entrance
+        </motion.p>
+        <h1 className="text-5xl sm:text-6xl font-serif font-bold tracking-tighter leading-none text-white mb-2">
+          Step
+        </h1>
+        <h1 className="text-5xl sm:text-6xl font-serif font-bold tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-300 to-purple-400">
+          Inside
+        </h1>
+      </motion.div>
 
-        <div className="flex gap-4 mb-16">
-          {[0, 1, 2, 3].map((idx) => (
+      {/* ── Dot indicators ── */}
+      <motion.div
+        animate={controls}
+        className="relative z-10 flex gap-5 items-center justify-center"
+      >
+        {[0, 1, 2, 3].map((i) => {
+          const filled = passcode.length > i;
+          return (
             <motion.div
-              key={idx}
-              animate={passcode.length > idx ? { scale: [1, 1.2, 1], backgroundColor: '#FF4D6D' } : { scale: 1, backgroundColor: '#FFFFFF' }}
-              className="w-5 h-5 rounded-full shadow-inner border-2 border-[#FF8E9E]/30"
+              key={i}
+              animate={{
+                scale: filled ? 1.25 : 1,
+                opacity: filled ? 1 : 0.25,
+                backgroundColor: error ? "#f87171" : filled ? "#c084fc" : "white",
+                boxShadow:
+                  filled && !error
+                    ? "0 0 24px 6px rgba(192,132,252,0.5)"
+                    : error && filled
+                    ? "0 0 16px 4px rgba(248,113,113,0.4)"
+                    : "none",
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="w-3 h-3 rounded-full"
             />
-          ))}
+          );
+        })}
+      </motion.div>
+
+      {/* ── Floating Keypad ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-xs px-8 pb-16"
+      >
+        {/* Status */}
+        <div className="h-8 flex items-center justify-center mb-6">
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.p
+                key="err"
+                initial={{ opacity: 0, y: 5, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(8px)" }}
+                className="text-red-400 text-[10px] font-bold uppercase tracking-[0.4em]"
+              >
+                Incorrect Code
+              </motion.p>
+            )}
+            {isVerifying && (
+              <motion.div
+                key="ver"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center gap-2"
+              >
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    animate={{ scaleY: [1, 2.5, 1], opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 0.7, repeat: Infinity, delay: i * 0.12 }}
+                    className="w-0.5 h-3 bg-purple-400 rounded-full origin-center"
+                  />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 w-full">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-            <button
-              key={num}
-              onClick={() => handleNumberClick(num.toString())}
-              className="w-full aspect-square rounded-[2rem] bg-white text-3xl font-black text-[#FF4D6D] shadow-lg shadow-[#FF8E9E]/20 hover:bg-[#FF4D6D] hover:text-white transition-all active:scale-90 flex items-center justify-center border-4 border-transparent hover:border-white/50"
+        {/* Numbers grid — borderless floating style */}
+        <div className="grid grid-cols-3 gap-y-2 gap-x-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, idx) => (
+            <motion.button
+              key={n}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + idx * 0.04, duration: 0.5 }}
+              whileTap={{ scale: 0.82, opacity: 0.7 }}
+              onClick={() => handleKeyPress(String(n))}
+              disabled={isVerifying}
+              className="flex items-center justify-center h-16 outline-none group select-none"
             >
-              {num}
-            </button>
+              <span className="text-4xl sm:text-5xl font-serif font-light text-white/70 group-hover:text-white group-active:text-purple-300 transition-all duration-200">
+                {n}
+              </span>
+            </motion.button>
           ))}
-          <div className="w-full aspect-square rounded-[2rem] flex items-center justify-center text-[#FF8E9E]/30">
-             <LucideHeart className="w-8 h-8 fill-current" />
-          </div>
-          <button
-            onClick={() => handleNumberClick("0")}
-            className="w-full aspect-square rounded-[2rem] bg-white text-3xl font-black text-[#FF4D6D] shadow-lg shadow-[#FF8E9E]/20 hover:bg-[#FF4D6D] hover:text-white transition-all active:scale-90 flex items-center justify-center border-4 border-transparent hover:border-white/50"
-          >
-            0
-          </button>
-          <button
-            onClick={handleDelete}
-            className="w-full aspect-square rounded-[2rem] bg-[#FFE5E9] flex items-center justify-center text-[#FF4D6D] shadow-lg shadow-[#FF8E9E]/10 hover:bg-[#FF4D6D] hover:text-white transition-all active:scale-90"
-          >
-            <LucideDelete className="w-8 h-8" />
-          </button>
-        </div>
 
-        <div className="mt-16 text-center space-y-4">
-            <div className="w-16 h-16 bg-white/40 rounded-full mx-auto flex items-center justify-center border-2 border-dashed border-[#FF8E9E] relative overflow-hidden">
-                <LucideScan className="w-8 h-8 text-[#FF8E9E] opacity-60" />
-                <motion.div 
-                    animate={{ y: [-20, 20, -20] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-x-0 h-px bg-[#FF4D6D] shadow-[0_0_10px_#FF4D6D]"
-                />
-            </div>
-            <p className="text-[10px] uppercase font-black tracking-[0.4em] text-[#FF8E9E]">Security Check</p>
+          {/* Row 4 */}
+          <div className="flex items-center justify-center h-16">
+            <AnimatePresence>
+              {passcode.length > 0 && !isVerifying && (
+                <motion.button
+                  key="del"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  onClick={handleBackspace}
+                  className="text-white/40 hover:text-white/80 active:scale-85 transition-all outline-none"
+                >
+                  <Delete className="w-6 h-6" />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.76 }}
+            whileTap={{ scale: 0.82, opacity: 0.7 }}
+            onClick={() => handleKeyPress("0")}
+            disabled={isVerifying}
+            className="flex items-center justify-center h-16 outline-none group select-none"
+          >
+            <span className="text-4xl sm:text-5xl font-serif font-light text-white/70 group-hover:text-white group-active:text-purple-300 transition-all duration-200">
+              0
+            </span>
+          </motion.button>
+
+          <div /> {/* empty right */}
         </div>
       </motion.div>
+
+      {/* grain */}
+      <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.04] bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20256%20256%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%224%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23n)%22%2F%3E%3C%2Fsvg%3E')]" />
     </div>
   );
 }
