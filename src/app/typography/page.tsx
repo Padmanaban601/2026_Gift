@@ -13,7 +13,24 @@ const tamilWords = [
 
 export default function TypographyHeartPage() {
   const [isHovered, setIsHovered] = useState(false);
+  const [hasNotified, setHasNotified] = useState(false);
   const [scatteredWords, setScatteredWords] = useState<any[]>([]);
+
+  const handleHover = () => {
+    setIsHovered(true);
+    if (!hasNotified) {
+      setHasNotified(true);
+      fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: "Aditi touched the heart! ❤️",
+          message: "Aditi interacted with the Tamil Typography Heart.",
+          timestamp: new Date().toLocaleString()
+        })
+      }).catch(console.error);
+    }
+  };
 
   useEffect(() => {
     // Generate scattered words once
@@ -30,7 +47,7 @@ export default function TypographyHeartPage() {
   }, []);
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#02040a] overflow-hidden">
+    <main className="relative min-h-screen flex flex-col items-center justify-center pt-20 md:pt-32 pb-24 bg-[#02040a] overflow-hidden">
       <ThreeBackground />
       
       <div className="z-10 w-full max-w-4xl mx-auto px-6 relative flex flex-col items-center">
@@ -79,7 +96,7 @@ export default function TypographyHeartPage() {
           </AnimatePresence>
 
           <motion.div
-            onMouseEnter={() => setIsHovered(true)}
+            onMouseEnter={handleHover}
             onMouseLeave={() => setIsHovered(false)}
             animate={isHovered ? { scale: 0.9, opacity: 0.1 } : { scale: 1, opacity: 1 }}
             className="relative cursor-pointer z-20 group"

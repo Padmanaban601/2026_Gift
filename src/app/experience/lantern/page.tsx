@@ -108,7 +108,7 @@ export default function LanternPage() {
   return (
     <main className="relative min-h-screen bg-[#02040a] overflow-hidden">
       {/* UI Overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-between py-20 px-6">
+      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-between pt-20 md:pt-32 pb-24 px-6">
         <div className="text-center">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}

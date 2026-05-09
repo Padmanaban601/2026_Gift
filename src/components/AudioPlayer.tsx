@@ -69,9 +69,9 @@ export default function AudioPlayer() {
         title={isPlaying ? "Mute Music" : "Play Music"}
       >
         {isPlaying ? (
-          <Volume2 className="w-5 h-5 md:w-6 md:h-6" />
+          <Music className="w-5 h-5 md:w-6 md:h-6 animate-pulse" />
         ) : (
-          <VolumeX className="w-5 h-5 md:w-6 md:h-6" />
+          <Music className="w-5 h-5 md:w-6 md:h-6 opacity-50" />
         )}
         
         {/* Glow effect when playing */}

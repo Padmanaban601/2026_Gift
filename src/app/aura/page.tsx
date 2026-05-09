@@ -190,7 +190,7 @@ export default function AuraScannerPage() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#02040a] overflow-hidden">
+    <main className="relative h-screen flex flex-col items-center justify-center pt-16 md:pt-24 pb-20 bg-[#02040a] overflow-hidden">
       <ThreeBackground />
 
       <div className="z-10 w-full max-w-4xl mx-auto px-6 relative flex flex-col items-center">
@@ -203,20 +203,20 @@ export default function AuraScannerPage() {
               exit={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
               className="flex flex-col items-center text-center"
             >
-              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-8">
+              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-6 md:mb-8">
                 <Fingerprint className="w-4 h-4 text-purple-400" />
                 <span className="text-xs font-bold uppercase tracking-[0.3em] text-slate-300">Energy Analysis</span>
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 tracking-tight">
+              <h1 className="text-3xl md:text-6xl font-serif font-bold text-white mb-4 md:mb-6 tracking-tight">
                 Aura Scanner
               </h1>
-              <p className="text-slate-400 text-lg font-light italic mb-16 max-w-md">
+              <p className="text-slate-400 text-base md:text-lg font-light italic mb-8 md:mb-16 max-w-md">
                 Place your energy on the scanner to reveal your spiritual vibration for this year.
               </p>
 
               {/* Scanner Circle */}
-              <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+              <div className="relative w-48 h-48 md:w-80 md:h-80 flex items-center justify-center">
                 <motion.div
                   className="absolute inset-0 rounded-full border-2 border-dashed border-white/10"
                   animate={{ rotate: 360 }}
@@ -224,7 +224,7 @@ export default function AuraScannerPage() {
                 />
 
                 <motion.div
-                  className={`relative w-48 h-48 md:w-60 md:h-60 rounded-full bg-white/[0.02] border border-white/10 backdrop-blur-xl flex items-center justify-center overflow-hidden cursor-pointer group`}
+                  className={`relative w-36 h-36 md:w-60 md:h-60 rounded-full bg-white/[0.02] border border-white/10 backdrop-blur-xl flex items-center justify-center overflow-hidden cursor-pointer group`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={!isScanning ? startScan : undefined}

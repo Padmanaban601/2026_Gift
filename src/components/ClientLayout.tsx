@@ -91,11 +91,10 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="min-h-screen pt-20"
+            className="min-h-screen"
           >
             <Navbar />
             <AudioPlayer />
-            <MoodSwitcher />
             {children}
           </motion.div>
         )}

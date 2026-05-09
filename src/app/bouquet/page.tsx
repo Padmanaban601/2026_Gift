@@ -35,6 +35,20 @@ export default function InfiniteBouquetPage() {
     };
 
     setFlowers(prev => [...prev, newFlower]);
+    
+    // Notify on first flower
+    if (clickCount === 0) {
+      fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: "Aditi started growing flowers! 🌸",
+          message: "Aditi opened the Infinite Bouquet and bloomed her first flower.",
+          timestamp: new Date().toLocaleString()
+        })
+      }).catch(console.error);
+    }
+
     setClickCount(prev => prev + 1);
   };
 
@@ -50,7 +64,7 @@ export default function InfiniteBouquetPage() {
         <h1 className="text-[20vw] font-serif font-bold text-white select-none">BOUQUET</h1>
       </div>
 
-      <div className="z-20 w-full max-w-4xl mx-auto px-6 pt-32 pb-12 relative flex flex-col items-center pointer-events-none">
+      <div className="z-20 w-full max-w-4xl mx-auto px-6 pt-20 md:pt-32 pb-12 relative flex flex-col items-center pointer-events-none">
         <div className="text-center mb-12">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}

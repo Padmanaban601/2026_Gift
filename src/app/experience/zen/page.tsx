@@ -91,13 +91,25 @@ export default function ZenPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => setHintVisible(false), 5000);
+    
+    // Send notification
+    fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: "Aditi is relaxing in the Zen Garden 🧘‍♀️",
+        message: "Aditi opened the Zen Fluid Garden experience.",
+        timestamp: new Date().toLocaleString()
+      })
+    }).catch(console.error);
+
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <main className="relative min-h-screen bg-[#02040a] overflow-hidden">
       {/* UI Overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-between py-24 px-6">
+      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-between pt-20 md:pt-32 pb-24 px-6">
         <div className="text-center">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}

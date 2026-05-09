@@ -26,7 +26,7 @@ export default function MessagePage() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center py-24 px-6 bg-[#02040a] overflow-x-hidden">
+    <main className="relative min-h-screen flex flex-col items-center pt-20 md:pt-32 pb-24 px-6 bg-[#02040a] overflow-x-hidden">
       {/* Noise Texture Replacement */}
       <div className="fixed inset-0 z-50 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')]" />
       
@@ -36,7 +36,7 @@ export default function MessagePage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="z-10 w-full max-w-3xl mx-auto relative mt-12"
+        className="z-10 w-full max-w-3xl mx-auto relative"
       >
         {/* Subtle Glow Behind Text */}
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-xl h-[500px] bg-gradient-to-b from-purple-500/10 to-pink-500/10 rounded-full blur-[100px] -z-10 pointer-events-none" />

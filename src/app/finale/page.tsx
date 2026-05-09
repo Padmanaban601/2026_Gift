@@ -41,13 +41,23 @@ export default function FinalePage() {
         setTimeout(() => {
           setIsLocked(false);
           setIsScanning(false);
+          // Send notification
+          fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              subject: "Aditi unlocked the Vault! 🔐",
+              message: "Aditi successfully scanned her fingerprint and unlocked the final secret.",
+              timestamp: new Date().toLocaleString()
+            })
+          }).catch(console.error);
         }, 500);
       }
     }, 50);
   };
 
   return (
-    <main className="relative min-h-screen bg-[#02040a] flex items-center justify-center overflow-hidden px-6">
+    <main className="relative h-screen bg-[#02040a] flex flex-col items-center justify-center pt-16 md:pt-24 pb-20 overflow-hidden px-6">
       <ThreeBackground />
       
       <div className="z-10 w-full max-w-4xl mx-auto relative">

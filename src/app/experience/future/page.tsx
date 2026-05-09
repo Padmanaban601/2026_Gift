@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
+import { useEffect } from "react";
 import { Newspaper, Calendar, TrendingUp, Award, Globe, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -51,7 +52,7 @@ export default function FuturePage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#02040a] py-24 px-6 overflow-x-hidden">
+    <main className="relative min-h-screen bg-[#02040a] pt-20 md:pt-32 pb-24 px-6 overflow-x-hidden">
       <ThreeBackground />
       
       <div className="z-10 w-full max-w-5xl mx-auto relative">

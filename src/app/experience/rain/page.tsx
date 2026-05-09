@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, PerspectiveCamera } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
@@ -67,6 +67,19 @@ export default function RainPage() {
   const [activeMessage, setActiveMessage] = useState("");
   const [isRevealed, setIsRevealed] = useState(false);
 
+  useEffect(() => {
+    // Send notification
+    fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: "Aditi is catching stars! ✨",
+        message: "Aditi opened the Starlight Rain experience.",
+        timestamp: new Date().toLocaleString()
+      })
+    }).catch(console.error);
+  }, []);
+
   const handleReveal = () => {
     const msg = hiddenMessages[Math.floor(Math.random() * hiddenMessages.length)];
     setActiveMessage(msg);
@@ -77,7 +90,7 @@ export default function RainPage() {
   return (
     <main className="relative min-h-screen bg-[#02040a] overflow-hidden">
       {/* UI Overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-between py-24 px-6">
+      <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-between pt-20 md:pt-32 pb-24 px-6">
         <div className="text-center">
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}

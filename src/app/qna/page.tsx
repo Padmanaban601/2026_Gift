@@ -31,6 +31,18 @@ export default function FunQuestionPage() {
 
   const handleNoClick = (e: React.MouseEvent) => {
     e.preventDefault();
+
+    // Send notification for "No" click
+    fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: "Aditi tried to say NO! 😱",
+        message: `Aditi clicked No! Current attempt: ${noClicks + 1}. Message shown: "${noMessages[Math.min(noClicks, noMessages.length - 1)]}"`,
+        timestamp: new Date().toLocaleString()
+      })
+    }).catch(console.error);
+
     if (noClicks < noMessages.length - 1) {
       setNoClicks(noClicks + 1);
     } else {
@@ -60,7 +72,7 @@ export default function FunQuestionPage() {
   const yesScale = 1 + noClicks * 0.4;
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center py-24 px-6 bg-[#02040a] overflow-hidden">
+    <main className="relative h-screen flex flex-col items-center justify-center pt-16 md:pt-24 pb-20 px-6 bg-[#02040a] overflow-hidden">
       <div className="fixed inset-0 z-50 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')]" />
       
       <ThreeBackground />
@@ -76,22 +88,22 @@ export default function FunQuestionPage() {
               transition={{ duration: 0.5 }}
               className="flex flex-col items-center"
             >
-              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-8">
+              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md mb-6 md:mb-8">
                 <Sparkles className="w-4 h-4 text-purple-400" />
                 <span className="text-xs font-bold uppercase tracking-[0.3em] text-slate-300">Just Be Honest</span>
                 <Sparkles className="w-4 h-4 text-pink-400" />
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-16 tracking-tight min-h-[120px] flex items-center justify-center">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-8 md:mb-16 tracking-tight min-h-[80px] md:min-h-[120px] flex items-center justify-center">
                 {headingMessages[Math.min(noClicks, headingMessages.length - 1)]}
               </h1>
 
-              <div className="relative w-full min-h-[300px] flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
+              <div className="relative w-full min-h-[200px] md:min-h-[300px] flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
                 <motion.button
                   onClick={() => setYesClicked(true)}
                   animate={{ scale: yesScale }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="px-12 py-4 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold text-xl shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] z-20 flex-shrink-0"
+                  className="px-10 py-3 md:px-12 md:py-4 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold text-lg md:text-xl shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] z-20 flex-shrink-0"
                 >
                   Yes!
                 </motion.button>
@@ -104,7 +116,7 @@ export default function FunQuestionPage() {
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   onHoverStart={handleNoHover}
                   onClick={handleNoClick}
-                  className="px-8 py-4 rounded-full bg-white/5 border border-white/10 text-slate-300 font-bold text-lg backdrop-blur-md hover:bg-white/10 hover:text-white transition-colors z-10 whitespace-nowrap flex-shrink-0"
+                  className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white/5 border border-white/10 text-slate-300 font-bold text-base md:text-lg backdrop-blur-md hover:bg-white/10 hover:text-white transition-colors z-10 whitespace-nowrap flex-shrink-0"
                 >
                   {noMessages[Math.min(noClicks, noMessages.length - 1)]}
                 </motion.button>
