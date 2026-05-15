@@ -46,11 +46,11 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 pt-20 md:pt-32 pb-12 bg-[#02040a]">
+    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-x-hidden px-6 pt-20 md:pt-32 pb-12 bg-[#02040a]">
       {/* Noise Texture Replacement */}
       <div className="fixed inset-0 z-50 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')]" />
       
-      <ThreeBackground name="Happy Birthday Aditi" />
+      <ThreeBackground name="Happy Birthday" />
 
       <motion.div
         variants={containerVariants}
@@ -74,24 +74,21 @@ export default function Home() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <h1 className="text-6xl md:text-9xl font-serif font-bold text-white mb-8 tracking-tight leading-[0.9]">
-            {greeting}, <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 [text-shadow:0_0_30px_rgba(168,85,247,0.4)]">
-              Aditi
-            </span>
+          <h1 className="text-6xl md:text-9xl font-serif font-bold text-white mb-8 tracking-tight leading-[0.9] [text-shadow:_0_0_30px_var(--theme-glow)]">
+            {greeting}
           </h1>
         </motion.div>
 
         <motion.div 
           variants={itemVariants}
-          className="relative max-w-2xl mx-auto"
+          className="relative max-w-2xl mx-auto px-12 py-8 rounded-[40px] bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]"
         >
-          <div className="absolute -left-8 -top-4 text-6xl text-white/10 font-serif leading-none italic">“</div>
-          <p className="text-xl md:text-3xl text-slate-400 font-light italic leading-relaxed mb-12">
+          <div className="absolute left-4 top-4 text-6xl text-white/10 font-serif leading-none italic">“</div>
+          <p className="text-xl md:text-3xl text-slate-300 font-light italic leading-relaxed mb-0">
             In a world of constant motion, <br className="hidden md:block" />
-            your smile is the <span className="text-white">perfect light</span>.
+            your smile is the <span className="text-white [text-shadow:_0_0_15px_var(--theme-glow)]">perfect light</span>.
           </p>
-          <div className="absolute -right-8 -bottom-12 text-6xl text-white/10 font-serif leading-none italic rotate-180">“</div>
+          <div className="absolute right-4 bottom-4 text-6xl text-white/10 font-serif leading-none italic rotate-180">“</div>
         </motion.div>
 
         <motion.div variants={itemVariants}>

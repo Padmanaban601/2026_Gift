@@ -2,19 +2,22 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Volume2, VolumeX, Music } from "lucide-react";
+import { Music } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useApp } from "./ClientLayout";
 
 export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isUnlocked } = useApp();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      audioRef.current = new Audio("/assets/birthday.webm");
+      audioRef.current = new Audio("/assets/_Raja_Rani_Happy_Birthday_Dialogue_Ringtone_(by Fringster.com).mp3");
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.5; // Set volume to 50% for song
+      audioRef.current.volume = 0.8; // Set volume to 80% for dialogue visibility
     }
     
     return () => {
@@ -25,9 +28,17 @@ export default function AudioPlayer() {
     };
   }, []);
 
+  // Handle playback based on page navigation
+  useEffect(() => {
+    if (!isHomePage && audioRef.current && isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  }, [isHomePage, isPlaying]);
+
   // Try to play automatically once the user passes the lock screen
   useEffect(() => {
-    if (isUnlocked && audioRef.current && !isPlaying) {
+    if (isUnlocked && isHomePage && audioRef.current && !isPlaying) {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise
@@ -40,7 +51,7 @@ export default function AudioPlayer() {
           });
       }
     }
-  }, [isUnlocked]);
+  }, [isUnlocked, isHomePage]);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -53,8 +64,8 @@ export default function AudioPlayer() {
     }
   };
 
-  // Do not render the player until the app is unlocked
-  if (!isUnlocked) return null;
+  // Do not render the player until the app is unlocked and on home page
+  if (!isUnlocked || !isHomePage) return null;
 
   return (
     <motion.div

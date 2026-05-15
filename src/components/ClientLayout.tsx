@@ -3,9 +3,12 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PasscodeLock from "./PasscodeLock";
+
 import Navbar from "./Navbar";
 import AudioPlayer from "./AudioPlayer";
 import MoodSwitcher from "./MoodSwitcher";
+import MagicCursor from "./MagicCursor";
+import { usePathname } from "next/navigation";
 
 const AppContext = createContext<{
   isUnlocked: boolean;
@@ -26,19 +29,13 @@ export const useApp = () => useContext(AppContext);
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [mood, setMood] = useState("luxury");
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
     const savedMood = localStorage.getItem("hb_mood");
     if (savedMood) setMood(savedMood);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const updateMood = (newMood: string) => {
@@ -68,11 +65,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <AppContext.Provider value={{ isUnlocked, unlock, logout, mood, setMood: updateMood }}>
       {/* Mood Theme Provider Style Wrapper */}
       <div className={`theme-${mood} transition-colors duration-1000`}>
-      {/* Custom Cursor Glow */}
-      <div 
-        className="fixed pointer-events-none z-[9998] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(168,85,247,0.12)_0%,transparent_70%)] -translate-x-1/2 -translate-y-1/2 hidden md:block will-change-transform" 
-        style={{ left: mousePos.x, top: mousePos.y }}
-      />
       
       <AnimatePresence mode="wait">
         {!isUnlocked ? (
@@ -91,11 +83,26 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="min-h-screen"
+            className="min-h-screen flex flex-col"
           >
+            <MagicCursor />
             <Navbar />
             <AudioPlayer />
-            {children}
+            <MoodSwitcher />
+            
+            <main className="flex-grow relative overflow-x-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={pathname}
+                  initial={{ opacity: 0, y: 10, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -10, filter: "blur(10px)" }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {children}
+                </motion.div>
+              </AnimatePresence>
+            </main>
           </motion.div>
         )}
       </AnimatePresence>

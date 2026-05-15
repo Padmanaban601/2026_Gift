@@ -190,7 +190,7 @@ export default function AuraScannerPage() {
   };
 
   return (
-    <main className="relative h-screen flex flex-col items-center justify-center pt-16 md:pt-24 pb-20 bg-[#02040a] overflow-hidden">
+    <main className="relative min-h-screen flex flex-col items-center justify-center py-20 bg-[#02040a] overflow-x-hidden">
       <ThreeBackground />
 
       <div className="z-10 w-full max-w-4xl mx-auto px-6 relative flex flex-col items-center">
@@ -316,10 +316,7 @@ export default function AuraScannerPage() {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Vibe ID:</span>
-                  <span className="text-[10px] text-purple-400 font-mono font-bold">{auraResult.vibeId}</span>
-                </div>
+
 
                 <motion.div
                   initial={{ opacity: 0 }}

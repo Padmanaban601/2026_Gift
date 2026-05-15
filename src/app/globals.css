@@ -29,7 +29,7 @@ body {
   transition: background-color 1s ease;
 }
 
-/* Custom Utilities for themes */
+/* Base utilities using theme variables */
 .bg-theme-accent { background-color: var(--theme-accent); }
 .text-theme-accent { color: var(--theme-accent); }
 .border-theme-accent { border-color: var(--theme-accent); }

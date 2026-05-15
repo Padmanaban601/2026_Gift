@@ -47,11 +47,11 @@ export default function MessagePage() {
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-slate-300">A Personal Note</span>
             <Sparkles className="w-4 h-4 text-pink-400" />
           </div>
-          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-4 tracking-tight">
-            Happy Birthday, Aditi
+          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-4 tracking-tight [text-shadow:_0_0_20px_var(--theme-glow)]">
+            Happy Birthday
           </h1>
-          <h2 className="text-2xl md:text-3xl font-serif text-pink-300/90 mb-6 tracking-wide">
-            இனிய பிறந்தநாள் வாழ்த்துக்கள், அதிதி
+          <h2 className="text-2xl md:text-3xl font-serif text-pink-300/90 mb-6 tracking-wide [text-shadow:_0_0_15px_var(--theme-glow)]">
+            இனிய பிறந்தநாள் வாழ்த்துக்கள்
           </h2>
         </motion.div>
 
@@ -67,28 +67,16 @@ export default function MessagePage() {
                 It's a joy to celebrate you and the amazing person you are today.
               </p>
             </motion.div>
-
             <motion.div variants={itemVariants} className="relative group">
               <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-pink-500/50 border border-pink-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-pink-400 transition-all duration-300 shadow-[0_0_10px_rgba(236,72,153,0.5)]" />
               <p>
-                You have an incredible way of bringing positivity wherever you go. 
-                Your kindness, your genuine spirit, and the way you care about those around you are truly inspiring.
+                Your smile has a magical way of lighting up everything around you—keep it shining bright today and forever.
               </p>
             </motion.div>
-
             <motion.div variants={itemVariants} className="relative group">
               <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-purple-500/50 border border-purple-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-purple-400 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
               <p>
-                This special day is just a small excuse to appreciate everything that makes you, you. 
-                I hope this year brings you as much joy, peace, and success as you bring to the world.
-              </p>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="relative group">
-              <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-pink-500/50 border border-pink-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-pink-400 transition-all duration-300 shadow-[0_0_10px_rgba(236,72,153,0.5)]" />
-              <p>
-                Take a moment to look back at how far you've come, and know that the journey ahead is filled with infinite possibilities. 
-                Keep smiling, today and always.
+                May this year bring you infinite joy, success, and the same beautiful light you bring to everyone around you.
               </p>
             </motion.div>
 

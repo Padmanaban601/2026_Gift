@@ -59,8 +59,20 @@ const hiddenMessages = [
   "You are Loved",
   "You are Strong",
   "You are Magical",
+  "You are Unique",
+  "You are Sunshine",
+  "You are Brave",
+  "You are Precious",
+  "You are the Best",
+  "You are a Gem",
   "அன்பானவள்",
-  "அழகானவள்"
+  "அழகானவள்",
+  "அறிவானவள்",
+  "சிறப்பானவள்",
+  "தனித்துவமானவள்",
+  "திறமையானவள்",
+  "இனியவள்",
+  "புன்னகை அரசி"
 ];
 
 export default function RainPage() {
@@ -110,9 +122,9 @@ export default function RainPage() {
         </div>
 
         <div className="pointer-events-auto">
-             <Link href="/experience/future">
+             <Link href="/finale">
                 <button className="group px-12 py-5 rounded-full bg-white text-slate-950 font-bold hover:shadow-[0_0_50px_rgba(255,255,255,0.2)] transition-all flex items-center gap-3">
-                    <span>Travel to Future</span>
+                    <span>The Grand Finale</span>
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
              </Link>
