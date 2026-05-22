@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
-import { Lock, Unlock, Fingerprint, Sparkles, ShieldCheck, Clock, Gift } from "lucide-react";
+import { Lock, Fingerprint, ShieldCheck, Gift } from "lucide-react";
 import Link from "next/link";
 
 export default function FinalePage() {
@@ -88,7 +88,7 @@ export default function FinalePage() {
 
               {/* Countdown */}
               <div className="grid grid-cols-4 gap-4 md:gap-8 mb-16 w-full max-w-xl">
-                {Object.entries(timeLeft).map(([label, value], i) => (
+                {Object.entries(timeLeft).map(([label, value]) => (
                   <div key={label} className="flex flex-col items-center">
                     <span className="text-3xl md:text-5xl font-mono font-bold text-white mb-1">
                       {value.toString().padStart(2, '0')}
@@ -146,10 +146,10 @@ export default function FinalePage() {
                 </div>
                 
                 <p className="text-2xl md:text-3xl text-white font-serif leading-relaxed mb-8">
-                  "The greatest gift is not what's inside the vault, but the journey you take to get there."
+                  &quot;The greatest gift is not what&apos;s inside the vault, but the journey you take to get there.&quot;
                 </p>
                 <p className="text-slate-400 text-lg font-light italic leading-relaxed">
-                  Aditi, you've completed the digital journey. Your future is as bright as the stars you connected and as vibrant as the aura we scanned. 
+                  Aditi, you&apos;ve completed the digital journey. Your future is as bright as the stars you connected and as vibrant as the aura we scanned. 
                   <br/><br/>
                   On June 6th, return here. Something more awaits.
                 </p>

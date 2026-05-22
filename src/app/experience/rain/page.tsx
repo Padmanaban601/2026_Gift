@@ -2,11 +2,12 @@
 
 import { useState, useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial, PerspectiveCamera } from "@react-three/drei";
+import { Points, PointMaterial } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
-import { Sparkles, ArrowRight, CloudRain, Heart } from "lucide-react";
+import { ArrowRight, CloudRain } from "lucide-react";
 import Link from "next/link";
+import { createPRNG } from "@/lib/pureRandom";
 
 const STAR_COUNT = 1500;
 
@@ -14,29 +15,34 @@ function StarRain() {
   const points = useRef<THREE.Points>(null!);
   
   const [positions, speeds] = useMemo(() => {
+    const prng = createPRNG(42);
     const pos = new Float32Array(STAR_COUNT * 3);
     const spd = new Float32Array(STAR_COUNT);
     for (let i = 0; i < STAR_COUNT; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 1] = Math.random() * 20;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 10;
-      spd[i] = 0.1 + Math.random() * 0.2;
+      pos[i * 3] = (prng() - 0.5) * 20;
+      pos[i * 3 + 1] = prng() * 20;
+      pos[i * 3 + 2] = (prng() - 0.5) * 10;
+      spd[i] = 0.1 + prng() * 0.2;
     }
     return [pos, spd];
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame(() => {
+    if (!points.current) return;
+    const posAttr = points.current.geometry.attributes.position;
+    const array = posAttr.array as Float32Array;
+    
     for (let i = 0; i < STAR_COUNT; i++) {
       const i3 = i * 3;
-      positions[i3 + 1] -= speeds[i]; // Fall down
+      array[i3 + 1] -= speeds[i]; // Fall down
       
       // Reset to top
-      if (positions[i3 + 1] < -10) {
-        positions[i3 + 1] = 10;
-        positions[i3] = (Math.random() - 0.5) * 20;
+      if (array[i3 + 1] < -10) {
+        array[i3 + 1] = 10;
+        array[i3] = (Math.random() - 0.5) * 20;
       }
     }
-    points.current.geometry.attributes.position.needsUpdate = true;
+    posAttr.needsUpdate = true;
   });
 
   return (

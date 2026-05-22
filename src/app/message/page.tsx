@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function MessagePage() {
   const containerVariants = {
@@ -64,7 +64,7 @@ export default function MessagePage() {
               <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-purple-500/50 border border-purple-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-purple-400 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
               <p>
                 Wishing a very Happy Birthday to someone with the brightest smile and the most wonderful character. 
-                It's a joy to celebrate you and the amazing person you are today.
+                It&apos;s a joy to celebrate you and the amazing person you are today.
               </p>
             </motion.div>
             <motion.div variants={itemVariants} className="relative group">

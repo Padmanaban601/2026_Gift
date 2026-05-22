@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Heart } from "lucide-react";
+import { Sparkles, Heart } from "lucide-react";
 
 interface Flower {
   id: number;

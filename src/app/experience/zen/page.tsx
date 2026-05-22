@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useRef, useMemo, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Points, PointMaterial, Float, PerspectiveCamera, MeshDistortMaterial } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Points, PointMaterial } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
-import { Sparkles, ArrowRight, MousePointer2, Wind } from "lucide-react";
+import { ArrowRight, MousePointer2, Wind } from "lucide-react";
 import Link from "next/link";
+import { createPRNG } from "@/lib/pureRandom";
 
 const PARTICLE_COUNT = 3000;
 
@@ -14,19 +15,19 @@ function FluidParticles() {
   const points = useRef<THREE.Points>(null!);
   const mouse = useRef(new THREE.Vector2(0, 0));
   
-  const [positions, step] = useMemo(() => {
+  const positions = useMemo(() => {
+    const prng = createPRNG(12345);
     const pos = new Float32Array(PARTICLE_COUNT * 3);
-    const stp = new Float32Array(PARTICLE_COUNT);
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 10;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 2;
-      stp[i] = Math.random();
+      pos[i * 3] = (prng() - 0.5) * 10;
+      pos[i * 3 + 1] = (prng() - 0.5) * 10;
+      pos[i * 3 + 2] = (prng() - 0.5) * 2;
     }
-    return [pos, stp];
+    return pos;
   }, []);
 
   useFrame((state) => {
+    if (!points.current) return;
     const time = state.clock.getElapsedTime();
     
     // Smoothly track mouse in world space
@@ -35,30 +36,33 @@ function FluidParticles() {
     mouse.current.x = THREE.MathUtils.lerp(mouse.current.x, targetX, 0.1);
     mouse.current.y = THREE.MathUtils.lerp(mouse.current.y, targetY, 0.1);
 
+    const posAttr = points.current.geometry.attributes.position;
+    const array = posAttr.array as Float32Array;
+
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const i3 = i * 3;
       
       // Basic wave motion
-      positions[i3] += Math.sin(time * 0.5 + positions[i3 + 1]) * 0.005;
-      positions[i3 + 1] += Math.cos(time * 0.3 + positions[i3]) * 0.005;
+      array[i3] += Math.sin(time * 0.5 + array[i3 + 1]) * 0.005;
+      array[i3 + 1] += Math.cos(time * 0.3 + array[i3]) * 0.005;
 
       // Interaction with mouse
-      const dx = positions[i3] - mouse.current.x;
-      const dy = positions[i3 + 1] - mouse.current.y;
+      const dx = array[i3] - mouse.current.x;
+      const dy = array[i3 + 1] - mouse.current.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       
       if (dist < 2) {
         const force = (2 - dist) * 0.05;
-        positions[i3] += dx * force;
-        positions[i3 + 1] += dy * force;
+        array[i3] += dx * force;
+        array[i3 + 1] += dy * force;
       }
 
       // Keep within bounds
-      if (Math.abs(positions[i3]) > 6) positions[i3] *= -0.9;
-      if (Math.abs(positions[i3 + 1]) > 6) positions[i3 + 1] *= -0.9;
+      if (Math.abs(array[i3]) > 6) array[i3] *= -0.9;
+      if (Math.abs(array[i3 + 1]) > 6) array[i3 + 1] *= -0.9;
     }
     
-    points.current.geometry.attributes.position.needsUpdate = true;
+    posAttr.needsUpdate = true;
     points.current.rotation.z = time * 0.05;
   });
 

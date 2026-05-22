@@ -38,7 +38,7 @@ export default function AudioPlayer() {
 
   // Try to play automatically once the user passes the lock screen
   useEffect(() => {
-    if (isUnlocked && isHomePage && audioRef.current && !isPlaying) {
+    if (isUnlocked && isHomePage && audioRef.current && audioRef.current.paused) {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise

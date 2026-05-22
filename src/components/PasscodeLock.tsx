@@ -3,13 +3,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { Delete } from "lucide-react";
+import Image from "next/image";
+import confetti from "canvas-confetti";
 
-const CORRECT_PASSCODE = "1234";
+const CORRECT_PASSCODE = "0621";
 
 export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [attempts, setAttempts] = useState(0);
   const controls = useAnimation();
 
   const handleKeyPress = useCallback((num: string) => {
@@ -28,12 +31,28 @@ export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
 
   useEffect(() => {
     if (passcode.length === 4) {
-      setIsVerifying(true);
+      const handle = requestAnimationFrame(() => setIsVerifying(true));
       const t = setTimeout(() => {
         if (passcode === CORRECT_PASSCODE) {
+          // Double confetti blast from bottom corners
+          confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { x: 0.1, y: 0.85 },
+            colors: ["#a855f7", "#ec4899", "#3b82f6", "#10b981", "#f59e0b"],
+            angle: 60,
+          });
+          confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { x: 0.9, y: 0.85 },
+            colors: ["#a855f7", "#ec4899", "#3b82f6", "#10b981", "#f59e0b"],
+            angle: 120,
+          });
           onUnlock();
         } else {
           setError(true);
+          setAttempts((a) => a + 1);
           setIsVerifying(false);
           controls.start({
             x: [-14, 14, -14, 14, -7, 7, 0],
@@ -42,7 +61,10 @@ export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
           setTimeout(() => { setPasscode(""); setError(false); }, 900);
         }
       }, 900);
-      return () => clearTimeout(t);
+      return () => {
+        cancelAnimationFrame(handle);
+        clearTimeout(t);
+      };
     }
   }, [passcode, onUnlock, controls]);
 
@@ -60,10 +82,12 @@ export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
 
       {/* ── Full-bleed art background ── */}
       <div className="fixed inset-0 z-0">
-        <img
+        <Image
           src="/portal_hero_v2.png"
           alt=""
-          className="w-full h-full object-cover brightness-[0.45] scale-105"
+          fill
+          priority
+          className="object-cover brightness-[0.45] scale-105"
         />
         {/* gradient layers */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
@@ -85,7 +109,7 @@ export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
           transition={{ delay: 0.4, duration: 1 }}
           className="text-white text-[9px] font-bold uppercase mb-5"
         >
-          Private Entrance
+          {/* Private Entrance */}
         </motion.p>
         <h1 className="text-5xl sm:text-6xl font-serif font-bold tracking-tighter leading-none text-white mb-2">
           Step
@@ -142,6 +166,17 @@ export default function PasscodeLock({ onUnlock }: { onUnlock: () => void }) {
                 className="text-red-400 text-[10px] font-bold uppercase tracking-[0.4em]"
               >
                 Incorrect Code
+              </motion.p>
+            )}
+            {attempts >= 1 && !error && !isVerifying && (
+              <motion.p
+                key="hint"
+                initial={{ opacity: 0, y: 5, filter: "blur(8px)" }}
+                animate={{ opacity: 0.8, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(8px)" }}
+                className="text-purple-300/80 text-[10px] font-bold uppercase tracking-[0.25em] text-center"
+              >
+                Hint: 0621 
               </motion.p>
             )}
             {isVerifying && (

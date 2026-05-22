@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Smile } from "lucide-react";
+import { Sparkles, Smile } from "lucide-react";
 
 const noMessages = [
   "No",

@@ -2,17 +2,19 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Float, Text } from "@react-three/drei";
-import { useRef, useState, useMemo, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
+import { createPRNG } from "@/lib/pureRandom";
 
 function StarBackground() {
   const ref = useRef<THREE.Points>(null!);
   const [sphere] = useState(() => {
+    const prng = createPRNG(456);
     const positions = new Float32Array(5000 * 3);
     for (let i = 0; i < 5000; i++) {
-      const theta = 2 * Math.PI * Math.random();
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 1.5 * Math.pow(Math.random(), 0.5);
+      const theta = 2 * Math.PI * prng();
+      const phi = Math.acos(2 * prng() - 1);
+      const r = 1.5 * Math.pow(prng(), 0.5);
       positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = r * Math.cos(phi);

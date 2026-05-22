@@ -6,7 +6,6 @@ import PasscodeLock from "./PasscodeLock";
 
 import Navbar from "./Navbar";
 import AudioPlayer from "./AudioPlayer";
-import MoodSwitcher from "./MoodSwitcher";
 import MagicCursor from "./MagicCursor";
 import { usePathname } from "next/navigation";
 
@@ -33,9 +32,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true);
     const savedMood = localStorage.getItem("hb_mood");
-    if (savedMood) setMood(savedMood);
+    requestAnimationFrame(() => {
+      setMounted(true);
+      if (savedMood) setMood(savedMood);
+    });
   }, []);
 
   const updateMood = (newMood: string) => {
@@ -55,7 +56,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     if (localStorage.getItem("hb_unlocked") === "true") {
-      setIsUnlocked(true);
+      requestAnimationFrame(() => {
+        setIsUnlocked(true);
+      });
     }
   }, []);
 
@@ -88,7 +91,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <MagicCursor />
             <Navbar />
             <AudioPlayer />
-            <MoodSwitcher />
             
             <main className="flex-grow relative overflow-x-hidden">
               <AnimatePresence mode="wait">

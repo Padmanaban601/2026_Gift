@@ -4,17 +4,27 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Heart } from "lucide-react";
+import { Sparkles, Heart } from "lucide-react";
 
 const tamilWords = [
   "அன்பு", "மகிழ்ச்சி", "அழகி", "புன்னகை", "வாழ்த்துக்கள்", 
   "அதிதி", "இனிமை", "காதல்", "வாழ்க்கை", "வெற்றி"
 ];
 
+interface ScatteredWord {
+  id: number;
+  text: string;
+  x: number;
+  y: number;
+  rotate: number;
+  scale: number;
+  delay: number;
+}
+
 export default function TypographyHeartPage() {
   const [isHovered, setIsHovered] = useState(false);
   const [hasNotified, setHasNotified] = useState(false);
-  const [scatteredWords, setScatteredWords] = useState<any[]>([]);
+  const [scatteredWords, setScatteredWords] = useState<ScatteredWord[]>([]);
 
   const handleHover = () => {
     setIsHovered(true);
@@ -43,7 +53,10 @@ export default function TypographyHeartPage() {
       scale: Math.random() * 0.5 + 0.5,
       delay: Math.random() * 0.5
     }));
-    setScatteredWords(words);
+    const handle = requestAnimationFrame(() => {
+      setScatteredWords(words);
+    });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   return (

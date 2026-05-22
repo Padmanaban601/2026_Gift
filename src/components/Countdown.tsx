@@ -30,12 +30,17 @@ export default function Countdown({ targetDate }: { targetDate: string }) {
       return timeLeft;
     };
 
-    setTimeLeft(calculateTimeLeft());
+    const handle = requestAnimationFrame(() => {
+      setTimeLeft(calculateTimeLeft());
+    });
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => {
+      cancelAnimationFrame(handle);
+      clearInterval(timer);
+    };
   }, [targetDate]);
 
   const items = [

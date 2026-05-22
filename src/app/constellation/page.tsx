@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Stars, Heart, MousePointer2 } from "lucide-react";
+import { Sparkles, Stars, Heart, MousePointer2 } from "lucide-react";
+import { createPRNG } from "@/lib/pureRandom";
 
 // Predefined points for the constellation
 // These form a heart-like shape
@@ -22,17 +23,11 @@ const constellationPoints = [
 export default function ConstellationPage() {
   const [activePoints, setActivePoints] = useState<number[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
 
   const handlePointClick = (id: number) => {
     // Only allow clicking in sequence or clicking any unclicked point
     // For this experience, let's allow clicking in sequence to make it feel like "drawing"
     if (activePoints.includes(id)) return;
-    
-    // Check if it's the next point in sequence (optional, but makes it more guided)
-    if (activePoints.length > 0 && id !== activePoints[activePoints.length - 1] + 1 && id !== 1) {
-        // Allow it anyway to not frustrate the user, but we could enforce order
-    }
 
     const newActivePoints = [...activePoints, id];
     setActivePoints(newActivePoints);
@@ -53,6 +48,18 @@ export default function ConstellationPage() {
       }, 1000);
     }
   };
+
+  const backgroundStars = useMemo(() => {
+    const prng = createPRNG(123);
+    return Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      x: `${prng() * 100}%`,
+      y: `${prng() * 100}%`,
+      scale: prng() * 5,
+      duration: 3 + prng() * 2,
+      repeatDelay: prng() * 3,
+    }));
+  }, []);
 
   return (
     <main className="relative h-screen flex flex-col items-center justify-center pt-16 md:pt-24 pb-20 bg-[#02040a] overflow-hidden">
@@ -85,7 +92,7 @@ export default function ConstellationPage() {
                   A Message Written <br className="md:hidden" /> in the Stars
                 </h1>
                 <p className="text-slate-400 text-lg font-light italic">
-                  Click the glowing stars to reveal what's hidden...
+                  Click the glowing stars to reveal what&apos;s hidden...
                 </p>
               </div>
 
@@ -217,8 +224,8 @@ export default function ConstellationPage() {
                 className="max-w-2xl px-4"
               >
                 <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-light mb-16 italic">
-                  "Just like the stars in the night sky, <br className="hidden md:block" />
-                  your smile is a beautiful light that reaches me across every mile."
+                  &quot;Just like the stars in the night sky, <br className="hidden md:block" />
+                  your smile is a beautiful light that reaches me across every mile.&quot;
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -246,9 +253,9 @@ export default function ConstellationPage() {
 
               {/* Final Bloom Effect */}
               <div className="fixed inset-0 pointer-events-none -z-10">
-                {[...Array(30)].map((_, i) => (
+                {backgroundStars.map((star) => (
                   <motion.div
-                    key={i}
+                    key={star.id}
                     className="absolute w-1 h-1 bg-white rounded-full"
                     initial={{ 
                       x: "50%", 
@@ -256,15 +263,15 @@ export default function ConstellationPage() {
                       opacity: 1 
                     }}
                     animate={{ 
-                      x: `${Math.random() * 100}%`,
-                      y: `${Math.random() * 100}%`,
+                      x: star.x,
+                      y: star.y,
                       opacity: 0,
-                      scale: Math.random() * 5
+                      scale: star.scale
                     }}
                     transition={{ 
-                      duration: 3 + Math.random() * 2,
+                      duration: star.duration,
                       repeat: Infinity,
-                      repeatDelay: Math.random() * 3
+                      repeatDelay: star.repeatDelay
                     }}
                   />
                 ))}

@@ -2,10 +2,11 @@
 
 import { useState, useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial, Float, Text, PerspectiveCamera, OrbitControls, Sky, Stars, MeshDistortMaterial } from "@react-three/drei";
+import { PerspectiveCamera, Stars, OrbitControls, Text, MeshDistortMaterial } from "@react-three/drei";
 import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
-import { Sparkles, Send, ArrowLeft, Heart } from "lucide-react";
+import { Sparkles, Heart, Send } from "lucide-react";
+import { createPRNG } from "@/lib/pureRandom";
 import Link from "next/link";
 
 function Lantern({ position, text, color }: { position: [number, number, number], text: string, color: string }) {
@@ -176,18 +177,22 @@ export default function LanternPage() {
             ))}
             
             {/* Some ambient lanterns */}
-            {useMemo(() => [...Array(20)].map((_, i) => (
-                <Lantern 
-                    key={`ambient-${i}`} 
-                    position={[
-                        (Math.random() - 0.5) * 20, 
-                        Math.random() * 10, 
-                        (Math.random() - 0.5) * 20
-                    ]} 
-                    text="" 
-                    color={["#f97316", "#fb7185", "#a855f7"][Math.floor(Math.random() * 3)]} 
-                />
-            )), [])}
+            {useMemo(() => {
+                const prng = createPRNG(999);
+                const colors = ["#f97316", "#fb7185", "#a855f7"];
+                return [...Array(20)].map((_, i) => (
+                    <Lantern 
+                        key={`ambient-${i}`} 
+                        position={[
+                            (prng() - 0.5) * 20, 
+                            prng() * 10, 
+                            (prng() - 0.5) * 20
+                        ]} 
+                        text="" 
+                        color={colors[Math.floor(prng() * 3)]} 
+                    />
+                ));
+            }, [])}
         </Canvas>
       </div>
 

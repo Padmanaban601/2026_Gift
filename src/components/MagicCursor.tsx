@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 
 export default function MagicCursor() {
@@ -13,13 +13,16 @@ export default function MagicCursor() {
   const followerY = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    setMounted(true);
+    const handle = requestAnimationFrame(() => setMounted(true));
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
     };
     window.addEventListener("mousemove", moveCursor);
-    return () => window.removeEventListener("mousemove", moveCursor);
+    return () => {
+      cancelAnimationFrame(handle);
+      window.removeEventListener("mousemove", moveCursor);
+    };
   }, [cursorX, cursorY]);
 
   if (!mounted) return null;

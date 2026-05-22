@@ -1,16 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Fingerprint, ShieldCheck, Zap } from "lucide-react";
+import { Sparkles, Fingerprint, ShieldCheck, Zap } from "lucide-react";
+
+interface AuraStat {
+  label: string;
+  value: string | number;
+}
+
+interface AuraResult {
+  name: string;
+  description: string;
+  color: string;
+  glow: string;
+  traits: string[];
+  energyType: string;
+  stats: AuraStat[];
+  message: string;
+  vibeId: string;
+}
 
 export default function AuraScannerPage() {
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [auraResult, setAuraResult] = useState<any>(null);
+  const [auraResult, setAuraResult] = useState<AuraResult | null>(null);
 
   const auraTypes = [
     {
@@ -195,7 +212,7 @@ export default function AuraScannerPage() {
 
       <div className="z-10 w-full max-w-4xl mx-auto px-6 relative flex flex-col items-center">
         <AnimatePresence mode="wait">
-          {!isCompleted ? (
+          {!isCompleted || !auraResult ? (
             <motion.div
               key="scanner-ui"
               initial={{ opacity: 0, y: 20 }}
@@ -294,11 +311,11 @@ export default function AuraScannerPage() {
                 </div>
 
                 <p className="text-xl md:text-2xl text-slate-300 font-light italic leading-relaxed mb-12 px-4">
-                  "{auraResult.description}"
+                  &quot;{auraResult.description}&quot;
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 w-full max-w-xl mx-auto">
-                  {auraResult.stats.map((stat: any, i: number) => (
+                  {auraResult.stats.map((stat: AuraStat, i: number) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -325,7 +342,7 @@ export default function AuraScannerPage() {
                   className="mb-16 p-6 rounded-3xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-white/5 backdrop-blur-sm"
                 >
                   <p className="text-sm font-medium text-purple-300 uppercase tracking-[0.2em] mb-2">Cosmic Guidance</p>
-                  <p className="text-white text-lg font-light italic">"{auraResult.message}"</p>
+                  <p className="text-white text-lg font-light italic">&quot;{auraResult.message}&quot;</p>
                 </motion.div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

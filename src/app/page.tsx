@@ -2,23 +2,26 @@
 // Last update: 2026-05-09 22:10
 
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Stars, Heart } from "lucide-react";
+import { ArrowRight, Sparkles, Stars } from "lucide-react";
 import Countdown from "@/components/Countdown";
+import { createPRNG } from "@/lib/pureRandom";
 
 export default function Home() {
   const [greeting, setGreeting] = useState("");
-  const [time, setTime] = useState(new Date());
 
   useEffect(() => {
-    const hours = time.getHours();
-    if (hours < 12) setGreeting("Good Morning");
-    else if (hours < 17) setGreeting("Good Afternoon");
-    else setGreeting("Good Evening");
-  }, [time]);
+    const handle = requestAnimationFrame(() => {
+      const hours = new Date().getHours();
+      if (hours < 12) setGreeting("Good Morning");
+      else if (hours < 17) setGreeting("Good Afternoon");
+      else setGreeting("Good Evening");
+    });
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   const birthdayDate = "2026-06-06T00:00:00";
 
@@ -44,6 +47,41 @@ export default function Home() {
       },
     },
   };
+
+  // Pre-generate micro-hearts using seedable random generator for purity
+  const microHearts = useMemo(() => {
+    const prng = createPRNG(42);
+    return Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      x: prng() * 100 + "%",
+      initialRotate: prng() * 360,
+      animateRotate: prng() * 360 + 180,
+      duration: prng() * 10 + 20,
+      delay: prng() * 20,
+    }));
+  }, []);
+
+  // Pre-generate balloon positions and animation parameters for purity
+  const balloons = useMemo(() => {
+    const prng = createPRNG(99);
+    return Array.from({ length: 8 }, (_, i) => {
+      const isLeft = i < 4;
+      const pos = 5 + prng() * 10;
+      const initRot = prng() * 20 - 10;
+      const rot1 = prng() * 20 - 10;
+      const rot2 = prng() * 40 - 20;
+      const rot3 = prng() * 20 - 10;
+      const duration = 20 + prng() * 10;
+      return {
+        id: i,
+        isLeft,
+        pos,
+        initRot,
+        animateRot: [rot1, rot2, rot3],
+        duration,
+      };
+    });
+  }, []);
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center overflow-x-hidden px-6 pt-20 md:pt-32 pb-12 bg-[#02040a]">
@@ -148,24 +186,24 @@ export default function Home() {
 
       {/* Floating Micro-hearts */}
       <div className="fixed inset-0 pointer-events-none opacity-20">
-        {[...Array(12)].map((_, i) => (
+        {microHearts.map((heart) => (
           <motion.div
-            key={i}
+            key={heart.id}
             initial={{ 
-              x: Math.random() * 100 + "%", 
+              x: heart.x, 
               y: "110%",
               opacity: 0,
-              rotate: Math.random() * 360
+              rotate: heart.initialRotate
             }}
             animate={{ 
               y: "-10%",
               opacity: [0, 1, 1, 0],
-              rotate: Math.random() * 360 + 180
+              rotate: heart.animateRotate
             }}
             transition={{ 
-              duration: Math.random() * 10 + 20, 
+              duration: heart.duration, 
               repeat: Infinity,
-              delay: Math.random() * 20,
+              delay: heart.delay,
               ease: "linear"
             }}
             className="absolute"
@@ -177,32 +215,29 @@ export default function Home() {
 
       {/* Elegant Floating Balloons (Framing the sides) */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {[...Array(8)].map((_, i) => {
-          const isLeft = i < 4;
-          const pos = 5 + Math.random() * 10;
-          
+        {balloons.map((balloon) => {
           return (
             <motion.div
-              key={`balloon-${i}`}
-              style={isLeft ? { left: `${pos}%` } : { right: `${pos}%` }}
+              key={`balloon-${balloon.id}`}
+              style={balloon.isLeft ? { left: `${balloon.pos}%` } : { right: `${balloon.pos}%` }}
               initial={{ 
                 y: "120%",
-                rotate: Math.random() * 20 - 10
+                rotate: balloon.initRot
               }}
               animate={{ 
                 y: "-20%",
-                x: [0, isLeft ? 15 : -15, 0],
-                rotate: [Math.random() * 20 - 10, Math.random() * 40 - 20, Math.random() * 20 - 10]
+                x: [0, balloon.isLeft ? 15 : -15, 0],
+                rotate: balloon.animateRot
               }}
               whileHover={{ 
                 scale: 1.1,
-                x: isLeft ? 40 : -40,
+                x: balloon.isLeft ? 40 : -40,
                 transition: { duration: 0.5, type: "spring" as const }
               }}
               transition={{ 
-                duration: 20 + Math.random() * 10, 
+                duration: balloon.duration, 
                 repeat: Infinity,
-                delay: i * 1.5,
+                delay: balloon.id * 1.5,
                 ease: "linear"
               }}
               className="absolute cursor-pointer z-20"
@@ -211,14 +246,14 @@ export default function Home() {
                   {/* Balloon Body */}
                   <div 
                       className={`w-12 h-16 md:w-16 md:h-20 rounded-[50%_50%_50%_50%_/_40%_40%_60%_60%] shadow-xl backdrop-blur-[2px] border border-white/10 ${
-                          i % 2 === 0 ? 'bg-gradient-to-br from-purple-500/30 to-purple-700/20' : 'bg-gradient-to-br from-pink-500/30 to-pink-700/20'
+                          balloon.id % 2 === 0 ? 'bg-gradient-to-br from-purple-500/30 to-purple-700/20' : 'bg-gradient-to-br from-pink-500/30 to-pink-700/20'
                       }`}
                   >
                       {/* Glossy Highlight */}
                       <div className="absolute top-3 left-3 w-3 h-5 bg-white/20 rounded-full blur-[2px] rotate-[25deg]" />
                   </div>
                   {/* Balloon Knot */}
-                  <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 ${i % 2 === 0 ? 'bg-purple-500/40' : 'bg-pink-500/40'}`} />
+                  <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 ${balloon.id % 2 === 0 ? 'bg-purple-500/40' : 'bg-pink-500/40'}`} />
                   {/* Balloon String */}
                   <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[1px] h-24 bg-gradient-to-b from-white/20 to-transparent" />
               </div>
