@@ -14,15 +14,23 @@ export default function Navbar() {
 
   const handleBack = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (pathname === '/typography') {
+    if (pathname === '/qna') {
+      router.push('/finale');
+    } else if (pathname === '/finale') {
+      router.push('/experience/rain');
+    } else if (pathname === '/experience/rain') {
+      router.push('/experience/zen');
+    } else if (pathname === '/experience/zen') {
+      router.push('/experience/lantern');
+    } else if (pathname === '/experience/lantern') {
+      router.push('/typography');
+    } else if (pathname === '/typography') {
       router.push('/bouquet');
     } else if (pathname === '/bouquet') {
       router.push('/aura');
     } else if (pathname === '/aura') {
       router.push('/constellation');
     } else if (pathname === '/constellation') {
-      router.push('/qna');
-    } else if (pathname === '/qna') {
       router.push('/message');
     } else if (pathname === '/message') {
       router.push('/');

@@ -156,11 +156,11 @@ export default function FinalePage() {
               </div>
 
               <div className="flex gap-6">
-                <Link href="/">
-                    <button className="px-10 py-4 rounded-full bg-white text-slate-950 font-bold hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all">
-                        Back to Home
-                    </button>
-                </Link>
+                 <Link href="/qna">
+                     <button className="px-10 py-4 rounded-full bg-white text-slate-950 font-bold hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all">
+                         One Last Question
+                     </button>
+                 </Link>
                 <button 
                     onClick={() => setIsLocked(true)}
                     className="px-8 py-4 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white transition-all font-bold uppercase text-xs tracking-widest"

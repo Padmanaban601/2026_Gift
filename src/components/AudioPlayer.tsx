@@ -2,51 +2,72 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Music } from "lucide-react";
+import { Music, Music4 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useApp } from "./ClientLayout";
 
 export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const homeAudioRef = useRef<HTMLAudioElement | null>(null);
+  const journeyAudioRef = useRef<HTMLAudioElement | null>(null);
   const { isUnlocked } = useApp();
   const pathname = usePathname();
   const isHomePage = pathname === "/";
 
+  // Initialize audio files
   useEffect(() => {
     if (typeof window !== "undefined") {
-      audioRef.current = new Audio("/assets/_Raja_Rani_Happy_Birthday_Dialogue_Ringtone_(by Fringster.com).mp3");
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.8; // Set volume to 80% for dialogue visibility
+      homeAudioRef.current = new Audio("/assets/_Raja_Rani_Happy_Birthday_Dialogue_Ringtone_(by Fringster.com).mp3");
+      homeAudioRef.current.loop = true;
+      homeAudioRef.current.volume = 0.8; // Set volume for dialogue visibility
+
+      journeyAudioRef.current = new Audio("/assets/journey.m4a");
+      journeyAudioRef.current.loop = true;
+      journeyAudioRef.current.volume = 0.8;
     }
     
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (homeAudioRef.current) {
+        homeAudioRef.current.pause();
+        homeAudioRef.current = null;
+      }
+      if (journeyAudioRef.current) {
+        journeyAudioRef.current.pause();
+        journeyAudioRef.current = null;
       }
     };
   }, []);
 
-  // Handle playback based on page navigation
+  // Handle cross-page audio switching
   useEffect(() => {
-    if (!isHomePage && audioRef.current && isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+    if (!isUnlocked) return;
+
+    const currentAudio = isHomePage ? homeAudioRef.current : journeyAudioRef.current;
+    const inactiveAudio = isHomePage ? journeyAudioRef.current : homeAudioRef.current;
+
+    // Stop the inactive audio
+    if (inactiveAudio && !inactiveAudio.paused) {
+      inactiveAudio.pause();
+      inactiveAudio.currentTime = 0;
     }
-  }, [isHomePage, isPlaying]);
+
+    // Play the active audio if it should be playing
+    if (isPlaying && currentAudio && currentAudio.paused) {
+      currentAudio.play().catch(err => console.log("Failed to switch tracks:", err));
+    }
+  }, [isHomePage, isPlaying, isUnlocked]);
 
   // Try to play automatically once the user passes the lock screen
   useEffect(() => {
-    if (isUnlocked && isHomePage && audioRef.current && audioRef.current.paused) {
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
+    if (isUnlocked) {
+      const activeAudio = isHomePage ? homeAudioRef.current : journeyAudioRef.current;
+      if (activeAudio && activeAudio.paused) {
+        activeAudio.play()
           .then(() => {
             setIsPlaying(true);
           })
           .catch((err) => {
-            // Autoplay was prevented by the browser. The user will have to manually click the button.
+            // Autoplay was prevented by browser
             console.log("Autoplay prevented:", err);
           });
       }
@@ -54,18 +75,19 @@ export default function AudioPlayer() {
   }, [isUnlocked, isHomePage]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
+    const currentAudio = isHomePage ? homeAudioRef.current : journeyAudioRef.current;
+    if (currentAudio) {
       if (isPlaying) {
-        audioRef.current.pause();
+        currentAudio.pause();
       } else {
-        audioRef.current.play();
+        currentAudio.play().catch(err => console.log("Playback failed:", err));
       }
       setIsPlaying(!isPlaying);
     }
   };
 
-  // Do not render the player until the app is unlocked and on home page
-  if (!isUnlocked || !isHomePage) return null;
+  // Do not render the player until the app is unlocked
+  if (!isUnlocked) return null;
 
   return (
     <motion.div
@@ -82,7 +104,7 @@ export default function AudioPlayer() {
         {isPlaying ? (
           <Music className="w-5 h-5 md:w-6 md:h-6 animate-pulse" />
         ) : (
-          <Music className="w-5 h-5 md:w-6 md:h-6 opacity-50" />
+          <Music4 className="w-5 h-5 md:w-6 md:h-6 opacity-50" />
         )}
         
         {/* Glow effect when playing */}

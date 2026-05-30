@@ -103,7 +103,7 @@ export default function MessagePage() {
           </div>
           
           <div className="mt-20">
-             <Link href="/qna" className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-slate-300 hover:text-white group hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+             <Link href="/constellation" className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-slate-300 hover:text-white group hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 <span className="text-sm tracking-[0.2em] uppercase font-bold">One More Thing</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </Link>

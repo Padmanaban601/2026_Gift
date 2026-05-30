@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThreeBackground from "@/components/ThreeBackground";
 import Link from "next/link";
-import { Sparkles, Smile } from "lucide-react";
+import Image from "next/image";
+import { Sparkles } from "lucide-react";
 
 const noMessages = [
   "No",
@@ -22,6 +23,15 @@ const headingMessages = [
   "This button is highly illegal to press! 🚨",
   "I'm giving you one last chance to be nice! 🥺",
   "That's it! Catch me if you can! 🏃‍♀️💨",
+];
+
+const reactionCats = [
+  "/assets/option_3/cat_wink.png",     // 0 clicks
+  "/assets/option_3/cat_confused.png", // 1 click
+  "/assets/option_3/cat_shocked.png",  // 2 clicks
+  "/assets/option_3/cat_crying.png",   // 3 clicks
+  "/assets/cat-angry.png",             // 4 clicks
+  "/assets/cat-gun.png",               // 5+ clicks
 ];
 
 export default function FunQuestionPage() {
@@ -77,7 +87,7 @@ export default function FunQuestionPage() {
       
       <ThreeBackground />
 
-      <div className="z-10 w-full max-w-2xl mx-auto relative text-center">
+      <div className="z-10 w-full max-w-2xl mx-auto relative text-center flex flex-col items-center">
         <AnimatePresence mode="wait">
           {!yesClicked ? (
             <motion.div
@@ -93,12 +103,34 @@ export default function FunQuestionPage() {
                 <span className="text-xs font-bold uppercase tracking-[0.3em] text-slate-300">Just Be Honest</span>
                 <Sparkles className="w-4 h-4 text-pink-400" />
               </div>
+
+              {/* Cat reaction image */}
+              <div className="relative w-44 h-44 md:w-56 md:h-56 mb-8 rounded-[32px] overflow-hidden border border-white/10 backdrop-blur-xl bg-white/[0.02] flex items-center justify-center shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={noClicks}
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.85 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative w-full h-full"
+                  >
+                    <Image
+                      src={reactionCats[Math.min(noClicks, reactionCats.length - 1)]}
+                      alt="Reaction Cat"
+                      fill
+                      priority
+                      className="object-contain p-4"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
               
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-8 md:mb-16 tracking-tight min-h-[80px] md:min-h-[120px] flex items-center justify-center">
+              <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-8 tracking-tight min-h-[60px] md:min-h-[80px] flex items-center justify-center">
                 {headingMessages[Math.min(noClicks, headingMessages.length - 1)]}
               </h1>
 
-              <div className="relative w-full min-h-[200px] md:min-h-[300px] flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+              <div className="relative w-full min-h-[150px] md:min-h-[220px] flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
                 <motion.button
                   onClick={() => setYesClicked(true)}
                   animate={{ scale: yesScale }}
@@ -130,9 +162,17 @@ export default function FunQuestionPage() {
               transition={{ type: "spring", bounce: 0.5, duration: 0.8 }}
               className="flex flex-col items-center"
             >
-              <div className="w-24 h-24 mb-8 bg-gradient-to-tr from-pink-400 to-purple-500 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(236,72,153,0.5)]">
-                <Smile className="w-12 h-12 text-white" />
+              {/* Happy Cat Image */}
+              <div className="relative w-44 h-44 md:w-56 md:h-56 mb-8 rounded-[32px] overflow-hidden border border-white/10 backdrop-blur-xl bg-white/[0.02] flex items-center justify-center shadow-[0_0_50px_rgba(236,72,153,0.3)]">
+                <Image
+                  src="/assets/option_3/cat_heart.png"
+                  alt="Happy Cat"
+                  fill
+                  priority
+                  className="object-contain p-4"
+                />
               </div>
+
               <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 tracking-tight">
                 Yay! I knew it! 🎉
               </h1>
@@ -157,10 +197,10 @@ export default function FunQuestionPage() {
                 }}
                 transition={{ delay: 1 }}
               >
-                <Link href="/constellation">
+                <Link href="/">
                   <button className="px-10 py-4 rounded-full bg-white text-slate-950 font-bold hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all flex items-center gap-3 group">
-                    <span>See what the stars say</span>
-                    <Sparkles className="w-5 h-5 text-purple-600 group-hover:rotate-12 transition-transform" />
+                    <span>Finish the Journey</span>
+                    <Sparkles className="w-5 h-5 text-pink-600 group-hover:scale-110 transition-transform" />
                   </button>
                 </Link>
               </motion.div>
