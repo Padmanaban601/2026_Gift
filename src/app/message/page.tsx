@@ -48,10 +48,10 @@ export default function MessagePage() {
             <Sparkles className="w-4 h-4 text-pink-400" />
           </div>
           <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-4 tracking-tight [text-shadow:_0_0_20px_var(--theme-glow)]">
-            Happy Birthday
+            Happy Birthday Aditi
           </h1>
           <h2 className="text-2xl md:text-3xl font-serif text-pink-300/90 mb-6 tracking-wide [text-shadow:_0_0_15px_var(--theme-glow)]">
-            இனிய பிறந்தநாள் வாழ்த்துக்கள்
+            இனிய பிறந்தநாள் வாழ்த்துக்கள் அதிதி
           </h2>
         </motion.div>
 

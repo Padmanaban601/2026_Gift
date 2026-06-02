@@ -155,7 +155,7 @@ export default function FinalePage() {
                 </p>
               </div>
 
-              <div className="flex gap-6">
+              <div className="flex gap-6 mb-10">
                  <Link href="/qna">
                      <button className="px-10 py-4 rounded-full bg-white text-slate-950 font-bold hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all">
                          One Last Question

@@ -26,12 +26,12 @@ const headingMessages = [
 ];
 
 const reactionCats = [
-  "/assets/option_3/cat_wink.png",     // 0 clicks
-  "/assets/option_3/cat_confused.png", // 1 click
-  "/assets/option_3/cat_shocked.png",  // 2 clicks
-  "/assets/option_3/cat_crying.png",   // 3 clicks
-  "/assets/cat-angry.png",             // 4 clicks
-  "/assets/cat-gun.png",               // 5+ clicks
+  "/assets/option_3/cat_wink.png",        // 0 clicks
+  "/assets/option_3/cat_confused_v2.png", // 1 click
+  "/assets/option_3/cat_shocked_v2.png",  // 2 clicks
+  "/assets/option_3/cat_crying_v2.png",   // 3 clicks
+  "/assets/cat-angry.png",                // 4 clicks
+  "/assets/cat-gun.png",                  // 5+ clicks
 ];
 
 export default function FunQuestionPage() {
@@ -177,7 +177,7 @@ export default function FunQuestionPage() {
                 Yay! I knew it! 🎉
               </h1>
               <p className="text-xl md:text-2xl text-pink-200/90 font-light max-w-md mx-auto leading-relaxed mb-12">
-                You have excellent taste. <br/> 
+                You are absolutely wonderful! 💖 <br/> 
                 Keep that beautiful smile going all day!
               </p>
 

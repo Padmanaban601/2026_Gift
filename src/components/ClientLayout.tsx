@@ -7,6 +7,7 @@ import PasscodeLock from "./PasscodeLock";
 import Navbar from "./Navbar";
 import AudioPlayer from "./AudioPlayer";
 import MagicCursor from "./MagicCursor";
+import PawPrintCursor from "./PawPrintCursor";
 import MoodSwitcher from "./MoodSwitcher";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -92,9 +93,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             className="min-h-screen flex flex-col"
           >
             <MagicCursor />
+            <PawPrintCursor />
             <Navbar />
             <AudioPlayer />
-            <MoodSwitcher />
             
             <main className="flex-grow relative overflow-x-hidden">
               <AnimatePresence mode="wait">

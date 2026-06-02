@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Happy Birthday",
+  title: "Happy Birthday Aditi",
   description: "A special birthday surprise.",
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({
       lang="en"
       className={`${outfit.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-white font-sans selection:bg-purple-500/30 overflow-x-hidden max-w-full">
+      <body className="min-h-full flex flex-col text-white font-sans selection:bg-purple-500/30 overflow-x-hidden max-w-full">
         <ClientLayout>
           {children}
         </ClientLayout>
