@@ -45,7 +45,10 @@ export default function FunQuestionPage() {
     // Send notification for "No" click
     fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
       body: JSON.stringify({
         subject: "Nandhithaa tried to say NO! 😱",
         message: `Nandhithaa clicked No! Current attempt: ${noClicks + 1}. Message shown: "${noMessages[Math.min(noClicks, noMessages.length - 1)]}"`,
@@ -187,7 +190,10 @@ export default function FunQuestionPage() {
                 onViewportEnter={() => {
                    fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
                      method: "POST",
-                     headers: { "Content-Type": "application/json" },
+                     headers: { 
+                       "Content-Type": "application/json",
+                       "Accept": "application/json"
+                     },
                      body: JSON.stringify({
                        subject: "Nandhithaa said YES! 😍",
                        message: "Nandhithaa liked the surprise and clicked Yes!",

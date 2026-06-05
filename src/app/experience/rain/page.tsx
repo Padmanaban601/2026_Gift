@@ -94,7 +94,10 @@ export default function RainPage() {
     // Send notification
     fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
       body: JSON.stringify({
         subject: "Nandhithaa is catching stars! ✨",
         message: "Nandhithaa opened the Starlight Rain experience.",

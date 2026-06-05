@@ -38,7 +38,10 @@ export default function ConstellationPage() {
         // Send notification
         fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
           body: JSON.stringify({
             subject: "Nandhithaa connected the stars! ✨",
             message: "Nandhithaa completed the heart constellation and saw her name in Tamil.",

@@ -82,7 +82,10 @@ export default function LanternPage() {
     try {
       await fetch(`https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_ID}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify({
           subject: "New Birthday Wish from Nandhithaa! 🏮",
           wish: wish,
