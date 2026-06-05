@@ -9,6 +9,7 @@ import AudioPlayer from "./AudioPlayer";
 import MagicCursor from "./MagicCursor";
 import PawPrintCursor from "./PawPrintCursor";
 import MoodSwitcher from "./MoodSwitcher";
+import FloatingHearts from "./FloatingHearts";
 import { usePathname, useRouter } from "next/navigation";
 
 const AppContext = createContext<{
@@ -94,6 +95,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           >
             <MagicCursor />
             <PawPrintCursor />
+            <FloatingHearts />
             <Navbar />
             <AudioPlayer />
             

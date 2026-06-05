@@ -84,7 +84,7 @@ export default function LanternPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          subject: "New Birthday Wish from Aditi! 🏮",
+          subject: "New Birthday Wish from Nandhithaa! 🏮",
           wish: wish,
           timestamp: new Date().toLocaleString()
         })

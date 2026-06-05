@@ -9,30 +9,35 @@ import { ArrowRight, CloudRain } from "lucide-react";
 import Link from "next/link";
 import { createPRNG } from "@/lib/pureRandom";
 
-const STAR_COUNT = 1500;
-
 function StarRain() {
   const points = useRef<THREE.Points>(null!);
+  const [starCount, setStarCount] = useState(1500);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setStarCount(600);
+    }
+  }, []);
   
   const [positions, speeds] = useMemo(() => {
     const prng = createPRNG(42);
-    const pos = new Float32Array(STAR_COUNT * 3);
-    const spd = new Float32Array(STAR_COUNT);
-    for (let i = 0; i < STAR_COUNT; i++) {
+    const pos = new Float32Array(starCount * 3);
+    const spd = new Float32Array(starCount);
+    for (let i = 0; i < starCount; i++) {
       pos[i * 3] = (prng() - 0.5) * 20;
       pos[i * 3 + 1] = prng() * 20;
       pos[i * 3 + 2] = (prng() - 0.5) * 10;
       spd[i] = 0.1 + prng() * 0.2;
     }
     return [pos, spd];
-  }, []);
+  }, [starCount]);
 
   useFrame(() => {
     if (!points.current) return;
     const posAttr = points.current.geometry.attributes.position;
     const array = posAttr.array as Float32Array;
     
-    for (let i = 0; i < STAR_COUNT; i++) {
+    for (let i = 0; i < starCount; i++) {
       const i3 = i * 3;
       array[i3 + 1] -= speeds[i]; // Fall down
       
@@ -91,8 +96,8 @@ export default function RainPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        subject: "Aditi is catching stars! ✨",
-        message: "Aditi opened the Starlight Rain experience.",
+        subject: "Nandhithaa is catching stars! ✨",
+        message: "Nandhithaa opened the Starlight Rain experience.",
         timestamp: new Date().toLocaleString()
       })
     }).catch(console.error);

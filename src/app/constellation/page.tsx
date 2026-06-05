@@ -40,8 +40,8 @@ export default function ConstellationPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            subject: "Aditi connected the stars! ✨",
-            message: "Aditi completed the heart constellation and saw her name in Tamil.",
+            subject: "Nandhithaa connected the stars! ✨",
+            message: "Nandhithaa completed the heart constellation and saw her name in Tamil.",
             timestamp: new Date().toLocaleString()
           })
         }).catch(console.error);
@@ -209,11 +209,11 @@ export default function ConstellationPage() {
                 </div>
                 <h1 className="text-7xl md:text-9xl font-serif font-bold text-white mb-6 tracking-tight">
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 [text-shadow:0_0_50px_rgba(168,85,247,0.3)]">
-                    அதிதி
+                    நந்திதா
                   </span>
                 </h1>
                 <p className="text-2xl md:text-4xl text-pink-200/90 font-light italic tracking-widest">
-                  Aditi
+                  Nandhithaa
                 </p>
               </motion.div>
 

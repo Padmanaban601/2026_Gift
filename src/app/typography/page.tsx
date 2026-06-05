@@ -8,7 +8,7 @@ import { Sparkles, Heart } from "lucide-react";
 
 const tamilWords = [
   "அன்பு", "மகிழ்ச்சி", "அழகி", "புன்னகை", "வாழ்த்துக்கள்", 
-  "அதிதி", "இனிமை", "காதல்", "வாழ்க்கை", "வெற்றி"
+  "நந்திதா", "இனிமை", "காதல்", "வாழ்க்கை", "வெற்றி"
 ];
 
 interface ScatteredWord {
@@ -34,8 +34,8 @@ export default function TypographyHeartPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          subject: "Aditi touched the heart! ❤️",
-          message: "Aditi interacted with the Tamil Typography Heart.",
+          subject: "Nandhithaa touched the heart! ❤️",
+          message: "Nandhithaa interacted with the Tamil Typography Heart.",
           timestamp: new Date().toLocaleString()
         })
       }).catch(console.error);
@@ -121,7 +121,7 @@ export default function TypographyHeartPage() {
             />
             <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-white font-serif font-bold text-2xl md:text-3xl tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                    அதிதி
+                    நந்திதா
                 </span>
             </div>
           </motion.div>

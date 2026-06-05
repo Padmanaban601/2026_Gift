@@ -47,8 +47,8 @@ export default function FunQuestionPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        subject: "Aditi tried to say NO! 😱",
-        message: `Aditi clicked No! Current attempt: ${noClicks + 1}. Message shown: "${noMessages[Math.min(noClicks, noMessages.length - 1)]}"`,
+        subject: "Nandhithaa tried to say NO! 😱",
+        message: `Nandhithaa clicked No! Current attempt: ${noClicks + 1}. Message shown: "${noMessages[Math.min(noClicks, noMessages.length - 1)]}"`,
         timestamp: new Date().toLocaleString()
       })
     }).catch(console.error);
@@ -174,10 +174,10 @@ export default function FunQuestionPage() {
               </div>
 
               <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 tracking-tight">
-                Yay! I knew it! 🎉
+                Once again, Happy Birthday Nandhithaa! 🎂
               </h1>
               <p className="text-xl md:text-2xl text-pink-200/90 font-light max-w-md mx-auto leading-relaxed mb-12">
-                You are absolutely wonderful! 💖 <br/> 
+                Yay! I knew you would say yes! You are absolutely wonderful! 💖 <br/> 
                 Keep that beautiful smile going all day!
               </p>
 
@@ -189,8 +189,8 @@ export default function FunQuestionPage() {
                      method: "POST",
                      headers: { "Content-Type": "application/json" },
                      body: JSON.stringify({
-                       subject: "Aditi said YES! 😍",
-                       message: "Aditi liked the surprise and clicked Yes!",
+                       subject: "Nandhithaa said YES! 😍",
+                       message: "Nandhithaa liked the surprise and clicked Yes!",
                        timestamp: new Date().toLocaleString()
                      })
                    }).catch(console.error);

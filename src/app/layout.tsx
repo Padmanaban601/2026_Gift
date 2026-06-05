@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Happy Birthday Aditi",
+  title: "Happy Birthday Nandhithaa",
   description: "A special birthday surprise.",
 };
 

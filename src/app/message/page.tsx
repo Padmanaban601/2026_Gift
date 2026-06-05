@@ -48,10 +48,10 @@ export default function MessagePage() {
             <Sparkles className="w-4 h-4 text-pink-400" />
           </div>
           <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-4 tracking-tight [text-shadow:_0_0_20px_var(--theme-glow)]">
-            Happy Birthday Aditi
+            Happy Birthday Nandhithaa
           </h1>
           <h2 className="text-2xl md:text-3xl font-serif text-pink-300/90 mb-6 tracking-wide [text-shadow:_0_0_15px_var(--theme-glow)]">
-            இனிய பிறந்தநாள் வாழ்த்துக்கள் அதிதி
+            இனிய பிறந்தநாள் வாழ்த்துக்கள் நந்திதா
           </h2>
         </motion.div>
 
@@ -62,27 +62,37 @@ export default function MessagePage() {
           <div className="space-y-16 text-lg md:text-2xl text-slate-300 font-light leading-relaxed px-4 sm:px-0">
             <motion.div variants={itemVariants} className="relative group">
               <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-purple-500/50 border border-purple-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-purple-400 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-              <p>
-                Wishing a very Happy Birthday to someone with the brightest smile and the most wonderful character. 
-                It&apos;s a joy to celebrate you and the amazing person you are today.
+              <p className="font-serif italic text-white/95 text-xl md:text-3xl leading-snug mb-3">
+                &quot;The future belongs to those who believe in the beauty of their dreams.&quot;
+              </p>
+              <p className="text-base text-slate-400 font-normal">
+                Nandhithaa, always believe in yourself and the infinite potential within you. Your journey is beautiful and just beginning.
               </p>
             </motion.div>
+
             <motion.div variants={itemVariants} className="relative group">
               <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-pink-500/50 border border-pink-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-pink-400 transition-all duration-300 shadow-[0_0_10px_rgba(236,72,153,0.5)]" />
-              <p>
-                Your smile has a magical way of lighting up everything around you—keep it shining bright today and forever.
+              <p className="font-serif italic text-white/95 text-xl md:text-3xl leading-snug mb-3">
+                &quot;Believe you can and you&apos;re halfway there.&quot;
               </p>
-            </motion.div>
-            <motion.div variants={itemVariants} className="relative group">
-              <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-purple-500/50 border border-purple-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-purple-400 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-              <p>
-                May this year bring you infinite joy, success, and the same beautiful light you bring to everyone around you.
+              <p className="text-base text-slate-400 font-normal">
+                Every challenge is just another step toward your growth. Trust the timing of your life and keep shining your beautiful light.
               </p>
             </motion.div>
 
             <motion.div variants={itemVariants} className="relative group">
               <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-purple-500/50 border border-purple-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-purple-400 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-              <p className="text-xl md:text-2xl text-pink-200/90 leading-relaxed">
+              <p className="font-serif italic text-white/95 text-xl md:text-3xl leading-snug mb-3">
+                &quot;Do not watch the clock; do what it does. Keep going.&quot;
+              </p>
+              <p className="text-base text-slate-400 font-normal">
+                Your dedication and wonderful character are your greatest strengths. May this year be filled with success, joy, and new heights.
+              </p>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="relative group">
+              <span className="absolute left-[-21px] md:left-[calc(-3rem-5px)] top-3 w-2.5 h-2.5 rounded-full bg-purple-500/50 border border-purple-400/50 hidden sm:block group-hover:scale-150 group-hover:bg-purple-400 transition-all duration-300 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+              <p className="text-xl md:text-2xl text-pink-200/90 leading-relaxed font-normal">
                 உன் அழகான புன்னகையும் நல்ல குணமும் எப்பொழுதும் மாறாமல் இருக்கட்டும்.
               </p>
             </motion.div>
@@ -103,7 +113,7 @@ export default function MessagePage() {
           </div>
           
           <div className="mt-20">
-             <Link href="/constellation" className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-slate-300 hover:text-white group hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+             <Link href="/cake" className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-slate-300 hover:text-white group hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 <span className="text-sm tracking-[0.2em] uppercase font-bold">One More Thing</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </Link>

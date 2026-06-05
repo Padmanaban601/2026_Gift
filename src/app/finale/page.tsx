@@ -46,8 +46,8 @@ export default function FinalePage() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              subject: "Aditi unlocked the Vault! 🔐",
-              message: "Aditi successfully scanned her fingerprint and unlocked the final secret.",
+              subject: "Nandhithaa unlocked the Vault! 🔐",
+              message: "Nandhithaa successfully scanned her fingerprint and unlocked the final secret.",
               timestamp: new Date().toLocaleString()
             })
           }).catch(console.error);
@@ -149,7 +149,7 @@ export default function FinalePage() {
                   &quot;The greatest gift is not what&apos;s inside the vault, but the journey you take to get there.&quot;
                 </p>
                 <p className="text-slate-400 text-lg font-light italic leading-relaxed">
-                  Aditi, you&apos;ve completed the digital journey. Your future is as bright as the stars you connected and as vibrant as the aura we scanned. 
+                  Nandhithaa, you&apos;ve completed the digital journey. Your future is as bright as the stars you connected and as vibrant as the aura we scanned. 
                   <br/><br/>
                   On June 6th, return here. Something more awaits.
                 </p>

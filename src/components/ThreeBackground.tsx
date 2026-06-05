@@ -9,9 +9,12 @@ import { createPRNG } from "@/lib/pureRandom";
 function StarBackground() {
   const ref = useRef<THREE.Points>(null!);
   const [sphere] = useState(() => {
+    // Detect screen width to reduce points count on mobile devices for performance
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const pointsCount = isMobile ? 1500 : 5000;
     const prng = createPRNG(456);
-    const positions = new Float32Array(5000 * 3);
-    for (let i = 0; i < 5000; i++) {
+    const positions = new Float32Array(pointsCount * 3);
+    for (let i = 0; i < pointsCount; i++) {
       const theta = 2 * Math.PI * prng();
       const phi = Math.acos(2 * prng() - 1);
       const r = 1.5 * Math.pow(prng(), 0.5);
@@ -56,10 +59,27 @@ function StarBackground() {
 }
 
 function FloatingContent({ name }: { name: string }) {
+  const [fontSize, setFontSize] = useState(0.2);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 480) {
+        setFontSize(0.08);
+      } else if (window.innerWidth < 768) {
+        setFontSize(0.12);
+      } else {
+        setFontSize(0.2);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
       <Text
-        fontSize={0.2}
+        fontSize={fontSize}
         color="#ffffff"
         anchorX="center"
         anchorY="middle"

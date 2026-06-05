@@ -8,86 +8,105 @@ import { useApp } from "./ClientLayout";
 
 export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const homeAudioRef = useRef<HTMLAudioElement | null>(null);
-  const journeyAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isUnlocked } = useApp();
   const pathname = usePathname();
-  const isHomePage = pathname === "/";
 
-  // Initialize audio files
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      homeAudioRef.current = new Audio("/assets/_Raja_Rani_Happy_Birthday_Dialogue_Ringtone_(by Fringster.com).mp3");
-      homeAudioRef.current.loop = true;
-      homeAudioRef.current.volume = 0.8; // Set volume for dialogue visibility
-
-      journeyAudioRef.current = new Audio("/assets/journey.m4a");
-      journeyAudioRef.current.loop = true;
-      journeyAudioRef.current.volume = 0.8;
+  // Map each page/section to its designated audio track
+  const getAudioSrc = (path: string): string => {
+    if (path === "/") {
+      return "/assets/home_instrumental.m4a";
     }
-    
-    return () => {
-      if (homeAudioRef.current) {
-        homeAudioRef.current.pause();
-        homeAudioRef.current = null;
+    if (path === "/message" || path === "/cake") {
+      return "/assets/_Raja_Rani_Happy_Birthday_Dialogue_Ringtone_(by Fringster.com).mp3";
+    }
+    if (path === "/constellation") {
+      return "/assets/AUD-20260604-WA0001_.mp3";
+    }
+    if (path === "/aura") {
+      return "/assets/AUD-20260604-WA0002_.mp3";
+    }
+    if (path === "/bouquet") {
+      return "/assets/AUD-20260605-WA0000_.mp3";
+    }
+    if (path === "/typography") {
+      return "/assets/AUD-20260605-WA0001_.mp3";
+    }
+    if (path.startsWith("/experience/")) {
+      return "/assets/AUD-20260605-WA0002_.mp3";
+    }
+    // remaining pages (/finale, /qna)
+    return "/assets/AUD-20260605-WA0003_.mp3";
+  };
+
+  const currentSrc = getAudioSrc(pathname);
+
+  // Initialize and handle track switching dynamically when pathname changes
+  useEffect(() => {
+    if (typeof window === "undefined" || !isUnlocked) return;
+
+    if (audioRef.current) {
+      const isSameSrc = audioRef.current.src.endsWith(encodeURI(currentSrc)) || audioRef.current.src.endsWith(currentSrc);
+      if (isSameSrc) {
+        if (isPlaying && audioRef.current.paused) {
+          audioRef.current.play().catch(err => console.log("Playback failed:", err));
+        }
+        return;
       }
-      if (journeyAudioRef.current) {
-        journeyAudioRef.current.pause();
-        journeyAudioRef.current = null;
+      audioRef.current.pause();
+    }
+
+    if (!currentSrc) {
+      audioRef.current = null;
+      return;
+    }
+
+    const newAudio = new Audio(currentSrc);
+    newAudio.loop = true;
+    newAudio.volume = 0.8;
+    audioRef.current = newAudio;
+
+    if (isPlaying) {
+      newAudio.play().catch(err => console.log("Playback failed on track switch:", err));
+    }
+  }, [currentSrc, isUnlocked, isPlaying]);
+
+  // Attempt autoplay when unlocked or when switching pages
+  useEffect(() => {
+    if (isUnlocked && audioRef.current && audioRef.current.paused) {
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((err) => {
+          console.log("Autoplay prevented:", err);
+        });
+    }
+  }, [isUnlocked, currentSrc]);
+
+  // Clean up audio playback on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
       }
     };
   }, []);
 
-  // Handle cross-page audio switching
-  useEffect(() => {
-    if (!isUnlocked) return;
-
-    const currentAudio = isHomePage ? homeAudioRef.current : journeyAudioRef.current;
-    const inactiveAudio = isHomePage ? journeyAudioRef.current : homeAudioRef.current;
-
-    // Stop the inactive audio
-    if (inactiveAudio && !inactiveAudio.paused) {
-      inactiveAudio.pause();
-      inactiveAudio.currentTime = 0;
-    }
-
-    // Play the active audio if it should be playing
-    if (isPlaying && currentAudio && currentAudio.paused) {
-      currentAudio.play().catch(err => console.log("Failed to switch tracks:", err));
-    }
-  }, [isHomePage, isPlaying, isUnlocked]);
-
-  // Try to play automatically once the user passes the lock screen
-  useEffect(() => {
-    if (isUnlocked) {
-      const activeAudio = isHomePage ? homeAudioRef.current : journeyAudioRef.current;
-      if (activeAudio && activeAudio.paused) {
-        activeAudio.play()
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((err) => {
-            // Autoplay was prevented by browser
-            console.log("Autoplay prevented:", err);
-          });
-      }
-    }
-  }, [isUnlocked, isHomePage]);
-
   const togglePlay = () => {
-    const currentAudio = isHomePage ? homeAudioRef.current : journeyAudioRef.current;
-    if (currentAudio) {
+    if (audioRef.current) {
       if (isPlaying) {
-        currentAudio.pause();
+        audioRef.current.pause();
       } else {
-        currentAudio.play().catch(err => console.log("Playback failed:", err));
+        audioRef.current.play().catch(err => console.log("Playback failed:", err));
       }
       setIsPlaying(!isPlaying);
     }
   };
 
-  // Do not render the player until the app is unlocked
-  if (!isUnlocked) return null;
+  // Do not render the player until the app is unlocked, and hide it on pages without a track
+  if (!isUnlocked || !currentSrc) return null;
 
   return (
     <motion.div

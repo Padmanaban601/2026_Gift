@@ -169,7 +169,7 @@ export default function AuraScannerPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            subject: `Aditi's Aura Result: ${result.name} ✨`,
+            subject: `Nandhithaa's Aura Result: ${result.name} ✨`,
             aura: result.name,
             traits: result.traits.join(", "),
             message: result.message,

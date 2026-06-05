@@ -14,7 +14,9 @@ export default function Navbar() {
 
   const handleBack = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (pathname === '/qna') {
+    if (pathname === '/cake') {
+      router.push('/message');
+    } else if (pathname === '/qna') {
       router.push('/finale');
     } else if (pathname === '/finale') {
       router.push('/experience/rain');
@@ -31,7 +33,7 @@ export default function Navbar() {
     } else if (pathname === '/aura') {
       router.push('/constellation');
     } else if (pathname === '/constellation') {
-      router.push('/message');
+      router.push('/cake');
     } else if (pathname === '/message') {
       router.push('/');
     } else {

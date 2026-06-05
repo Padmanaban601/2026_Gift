@@ -9,22 +9,27 @@ import { ArrowRight, MousePointer2, Wind } from "lucide-react";
 import Link from "next/link";
 import { createPRNG } from "@/lib/pureRandom";
 
-const PARTICLE_COUNT = 3000;
-
 function FluidParticles() {
   const points = useRef<THREE.Points>(null!);
   const mouse = useRef(new THREE.Vector2(0, 0));
+  const [particleCount, setParticleCount] = useState(3000);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setParticleCount(1200);
+    }
+  }, []);
   
   const positions = useMemo(() => {
     const prng = createPRNG(12345);
-    const pos = new Float32Array(PARTICLE_COUNT * 3);
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const pos = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
       pos[i * 3] = (prng() - 0.5) * 10;
       pos[i * 3 + 1] = (prng() - 0.5) * 10;
       pos[i * 3 + 2] = (prng() - 0.5) * 2;
     }
     return pos;
-  }, []);
+  }, [particleCount]);
 
   useFrame((state) => {
     if (!points.current) return;
@@ -39,7 +44,7 @@ function FluidParticles() {
     const posAttr = points.current.geometry.attributes.position;
     const array = posAttr.array as Float32Array;
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
       
       // Basic wave motion
@@ -101,8 +106,8 @@ export default function ZenPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        subject: "Aditi is relaxing in the Zen Garden 🧘‍♀️",
-        message: "Aditi opened the Zen Fluid Garden experience.",
+        subject: "Nandhithaa is relaxing in the Zen Garden 🧘‍♀️",
+        message: "Nandhithaa opened the Zen Fluid Garden experience.",
         timestamp: new Date().toLocaleString()
       })
     }).catch(console.error);
